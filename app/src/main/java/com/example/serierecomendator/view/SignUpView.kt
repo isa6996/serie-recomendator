@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.serierecomendator.viewModel.SignUpViewModel
 
@@ -56,7 +57,8 @@ fun SignUpView(){
                     value = password.value,
                     onValueChange = {password.value=it},
                     label = { Text(text = "Password")},
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    visualTransformation = PasswordVisualTransformation()
                 )
                 Button(
                     onClick = {
