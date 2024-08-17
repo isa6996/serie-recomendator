@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 //import com.example.serierecomendator.data.RetrofitServiceFactory
 import com.example.serierecomendator.ui.theme.SerieRecomendatorTheme
+import com.example.serierecomendator.view.LoginView
 import com.example.serierecomendator.view.SignUpView
 import com.example.serierecomendator.viewModel.SignUpViewModel
 import kotlinx.coroutines.launch
@@ -24,12 +25,12 @@ class MainActivity : ComponentActivity() {
 
    /*     val service = RetrofitServiceFactory.makeRetrofitService()
         lifecycleScope.launch{
-            val movies =service.listSeries("e32dd4598e7cb2f7dc42b4bf44d971c3","US")
+            val movies =service.listSeries("")
             println(movies)
         }*/
 
         setContent {
-            SignUpView()
+            LoginView()
         }
 
     }
