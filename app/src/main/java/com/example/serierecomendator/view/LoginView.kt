@@ -20,10 +20,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.serierecomendator.R
+import com.example.serierecomendator.navigation.Screen
+import com.example.serierecomendator.viewModel.LoginViewModel
 
 @Composable
-fun LoginView(){
+fun LoginView(navController: NavHostController) {
 
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
@@ -59,11 +62,18 @@ fun LoginView(){
                 )
 
 
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = {
+                    LoginViewModel().loginUser(email.value, password.value)
+                    navController.navigate(Screen.Home.route)
+
+                }
+                ) {
                     Text(text = "Login")
                 }
                 Button(
-                    onClick = {  /*TODO*/ },
+                    onClick = {
+
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = "sign in with google")
@@ -73,7 +83,9 @@ fun LoginView(){
 
                 // Sign up button
                 TextButton(
-                    onClick = {  },
+                    onClick = {
+                        navController.navigate(Screen.SignUp.route)
+                    },
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
                     Text(text = "create account")
@@ -82,7 +94,9 @@ fun LoginView(){
 
                 // Forgot password button
                 TextButton(
-                    onClick = {  },
+                    onClick = {
+                        navController.navigate(Screen.ForgottenPass.route)
+                    },
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
                     Text(text = "forgot pass")

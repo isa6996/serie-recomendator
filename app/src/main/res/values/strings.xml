@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Serie Recomendator</string>
+    <string name="screen_home">home</string>
 </resources>

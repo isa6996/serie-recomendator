@@ -12,6 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.serierecomendator.navigation.Navigation
 //import com.example.serierecomendator.data.RetrofitServiceFactory
 import com.example.serierecomendator.ui.theme.SerieRecomendatorTheme
 import com.example.serierecomendator.view.LoginView
@@ -20,6 +24,7 @@ import com.example.serierecomendator.viewModel.SignUpViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,9 +35,17 @@ class MainActivity : ComponentActivity() {
         }*/
 
         setContent {
-            LoginView()
+            MainScreen()
         }
 
     }
 
 }
+
+@Composable
+fun MainScreen() {
+    val navController = rememberNavController()
+    Navigation(navController = navController)
+}
+
+

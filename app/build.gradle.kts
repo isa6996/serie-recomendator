@@ -54,7 +54,10 @@ dependencies {
 //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    //firebase
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    //
+    implementation ("androidx.navigation:navigation-compose:2.7.7")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -66,6 +69,7 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.common.ktx)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.navigation.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
