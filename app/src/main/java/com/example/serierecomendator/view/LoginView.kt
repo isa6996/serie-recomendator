@@ -1,5 +1,7 @@
 package com.example.serierecomendator.view
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,6 +33,11 @@ fun LoginView(navController: NavHostController) {
 
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    val loginViewModel: LoginViewModel = LoginViewModel()
+
+
+
+
 
     Column ( modifier = Modifier
         .fillMaxSize()
@@ -62,18 +70,24 @@ fun LoginView(navController: NavHostController) {
                 )
 
 
-                Button(onClick = {
-                    LoginViewModel().loginUser(email.value, password.value)
-                    navController.navigate(Screen.Home.route)
-
-                }
-                ) {
-                    Text(text = "Login")
-                }
                 Button(
                     onClick = {
-
+                        loginViewModel.loginUser(email.value, password.value) { userEmail ->
+                            // Acción a realizar en caso de éxito, por ejemplo, navegar a otra pantalla
+                            Log.d("LoginView", "Login successful for user: $userEmail")
+                            if (loginViewModel.isLoggedIn() ) {
+                                navController.navigate(Screen.Home.route)
+                            }
+                        }
+                    },) {
+                    Text(text = "Login")
+                }
+                // Sign in button
+                Button(
+                    onClick = {
+               //         navController.navigate(Screen.SignInWithGoogle.route)
                     },
+
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = "sign in with google")
