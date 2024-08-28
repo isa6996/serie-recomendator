@@ -58,6 +58,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     //
     implementation ("androidx.navigation:navigation-compose:2.7.7")
+    implementation ("com.google.accompanist:accompanist-navigation-animation:0.18.0")
+    implementation("androidx.compose.material:material:1.4.3")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
