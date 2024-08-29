@@ -19,6 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.serierecomendator.navigation.BottomNavigationBar
 import com.example.serierecomendator.navigation.Navigation
+import com.example.serierecomendator.navigation.Screen
 //import com.example.serierecomendator.data.RetrofitServiceFactory
 import com.example.serierecomendator.ui.theme.SerieRecomendatorTheme
 import com.example.serierecomendator.view.LoginView
@@ -50,30 +51,16 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val loginViewModel: LoginViewModel = LoginViewModel()
 
-    val isLoggedIn = loginViewModel.isLoggedIn()
-    Log.d("bottomNav", "antes del  if"+isLoggedIn.toString())
-
-    if(isLoggedIn) {
-        Scaffold(
-            bottomBar = {
+    Scaffold(
+        bottomBar = {
                 BottomNavigationBar(navController)
-            }
-
-
-        ) { innerPadding ->
-            Box(modifier = Modifier.padding(innerPadding)) {
-                Navigation(navController = navController)
-                Log.d("bottomNav", "por si acaso " + isLoggedIn.toString())
-
-            }
         }
-        Log.d("bottomNav", "despues del if" + isLoggedIn.toString())
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            Navigation(navController = navController)
+        }
     }
-    else
-        Navigation(navController = navController)
-
 }
 
 

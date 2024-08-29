@@ -25,30 +25,45 @@ fun BottomNavigationBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    BottomNavigation {
+    if (shouldShowBottomBar(currentRoute)) {
 
-        items.forEach { screen ->
-            BottomNavigationItem(
-                icon = {
-                    when (screen) {
-                        is Screen.Home -> Icon(Icons.Default.Email, contentDescription = null)
-                        is Screen.Settings -> Icon(Icons.Default.Settings, contentDescription = null)
-                        is Screen.Profile -> Icon(Icons.Default.Person, contentDescription = null)
-                        else -> Icon(Icons.Default.Info, contentDescription = null)
-                    }
-                },
-                label = { Text(screen.route) },
-                selected = currentRoute == screen.route,
-                onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+        BottomNavigation {
+            items.forEach { screen ->
+                BottomNavigationItem(
+                    icon = {
+                        when (screen) {
+                            is Screen.Home -> Icon(
+                                Icons.Default.Email,
+                                contentDescription = null
+                            )
+                            is Screen.Settings -> Icon(
+                                Icons.Default.Settings,
+                                contentDescription = null
+                            )
+                            is Screen.Profile -> Icon(
+                                Icons.Default.Person,
+                                contentDescription = null
+                            )
+                            else -> Icon(Icons.Default.Info, contentDescription = null)
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                    },
+                    label = { Text(screen.route) },
+                    selected = currentRoute == screen.route,
+                    onClick = {
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
+}
+
+fun shouldShowBottomBar(route: String?): Boolean {
+    return route == Screen.Profile.route || route == Screen.Settings.route|| route == Screen.Home.route
 }
