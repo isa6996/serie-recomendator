@@ -41,7 +41,7 @@ class SignUpViewModel(): ViewModel() {
         Log.d("create User", "createUserWithEmail:success")
           UserRepository().createUserRepository(
 
-                    userId= auth.currentUser!!.uid,
+                    userId= auth.currentUser?.uid.toString(),
                     displayName = displayName
 
                 )

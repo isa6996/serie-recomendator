@@ -18,7 +18,7 @@ class LoginViewModel() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("Login", "signInWithEmail:success")
 
-                        onLoginSuccess(auth.currentUser!!.email!!)
+                        onLoginSuccess(auth.currentUser?.email!!)
                         isLoggedIn()
 
                     } else {

@@ -1,4 +1,4 @@
-package com.example.serierecomendator.data.model
+package com.example.serierecomendator.data.model.retrofit
 
 data class Result(
     val adult: Boolean,

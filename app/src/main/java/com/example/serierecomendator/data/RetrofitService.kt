@@ -1,12 +1,5 @@
 package com.example.serierecomendator.data
 
-import com.example.serierecomendator.data.model.RemoteResult
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
-
 interface RetrofitService {/*
     @GET("search/movie?query=el")
     suspend fun listSeries(
