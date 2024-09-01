@@ -37,14 +37,12 @@ class UserRepository {
             .get()
             .addOnCompleteListener {task ->
                 if (task.isSuccessful) {
-                        val document = task.result?.documents
+                    val document = task.result?.documents
                     val user = document?.firstOrNull()?.toObject(UserClass::class.java)
-
-                        callback(user)
-                        Log.d("User", "user: " + user?.displayName)
-                    Log.d("User", "userid "+ user?.userId)
-                    Log.d("User", "dsdfs " +currentUserId.toString())
-
+                    callback(user)
+                    Log.d("User", "user: " + user?.displayName)
+                    Log.d("User", "userid " + user?.userId)
+                    Log.d("User", "id current user " + currentUserId.toString())
                 }
                 Log.d("User", "user despues del if : " +currentUserId.toString())
             }
