@@ -1,6 +1,6 @@
 package com.example.serierecomendator.data.model.retrofit
 
-data class RemoteResult(
+data class SearchedMovie(
     val page: Int,
     val results: List<Result>,
     val total_pages: Int,
