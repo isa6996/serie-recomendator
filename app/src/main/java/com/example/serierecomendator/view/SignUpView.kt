@@ -18,11 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.serierecomendator.viewModel.SignUpViewModel
 
 @Composable
 fun SignUpView(navController: NavHostController){
+
+    val signUpViewModel: SignUpViewModel = hiltViewModel()
     val displayName = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
@@ -63,7 +66,7 @@ fun SignUpView(navController: NavHostController){
                 )
                 Button(
                     onClick = {
-                        SignUpViewModel().createUserWithEmailAndPassword(
+                        signUpViewModel.createUserWithEmailAndPassword(
                             displayName = displayName.value,
                             email = email.value,
                             password = password.value

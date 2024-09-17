@@ -26,10 +26,12 @@ import com.example.serierecomendator.navigation.Screen
 import com.example.serierecomendator.viewModel.SettingsViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun SettingsView(navController: NavHostController) {
-    val settingsViewModel = SettingsViewModel()
+
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var newDisplayName by remember { mutableStateOf("") }
 

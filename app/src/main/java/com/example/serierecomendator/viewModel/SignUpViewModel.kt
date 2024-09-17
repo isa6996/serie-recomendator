@@ -7,8 +7,11 @@ import com.example.serierecomendator.repository.UserRepository
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SignUpViewModel(): ViewModel() {
+@HiltViewModel
+class SignUpViewModel@Inject constructor(): ViewModel() {
 
 
     private val auth: FirebaseAuth = Firebase.auth

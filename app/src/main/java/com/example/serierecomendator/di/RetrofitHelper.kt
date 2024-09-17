@@ -9,7 +9,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-
+/*
+ * Clase que proporciona una instancia de Retrofit para la API de películas.
+ * @Singleton para que solo exista una instancia de Retrofit en toda la aplicación
+ * @Provides para que Dagger hilt inyecte la dependencia
+ * seleccioa la URL de la API de películas (https://api.themoviedb.org/3/) y el tipo de conversión
+ * de datos (Gson) para la API de películas.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitHelper {
@@ -21,6 +27,7 @@ object RetrofitHelper {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
 
     @Singleton
     @Provides

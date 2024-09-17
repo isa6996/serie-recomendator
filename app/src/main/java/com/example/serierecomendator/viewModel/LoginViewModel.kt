@@ -2,11 +2,15 @@ package com.example.serierecomendator.viewModel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.example.serierecomendator.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class LoginViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor() : ViewModel() {
     private val auth= FirebaseAuth.getInstance()
 
     fun  loginUser(email: String, password: String, onLoginSuccess: (String) -> Unit) {
