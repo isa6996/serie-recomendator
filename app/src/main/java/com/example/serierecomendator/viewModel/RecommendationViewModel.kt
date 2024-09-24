@@ -26,7 +26,7 @@ class RecommendationViewModel @Inject constructor(
     private val _movies =MutableLiveData<List<Result>>()
     val movies: LiveData<List<Result>> get() = _movies
 
-    init {
+    /*init {
         viewModelScope.launch{
             try {
                 repository.getMovies("dungeon+meshi")
@@ -46,13 +46,24 @@ class RecommendationViewModel @Inject constructor(
             }
         }
 
-    }
+    }*/
 
     fun TitleToSearch(title: String){
         val searchedTitleSerie = title.replace(" ", "+")
         viewModelScope.launch {
-            val searchResults = repository.getMovies(searchedTitleSerie)
-            _movies.value = searchResults.results
+            try {
+                val searchResults = repository.getMovies(searchedTitleSerie)
+                _movies.value = searchResults.results
+                Log.d("MovieDBAPI", "llamada: " + searchResults.results)
+            }catch ( e: Exception){
+                Log.d("MovieDBAPI", "Error: " + e.message)
+                Log.d("MovieDBAPI", "Error: " + e.stackTrace)
+                Log.d("MovieDBAPI", "Error: " + e.cause)
+
+            }catch (e: IndexOutOfBoundsException) {
+                Log.e("MovieDBAPI", "Error de índice: ${e.message}", e)
+                // Maneja el error de índice de forma más específica
+            }
         }
         Log.d("buscador", "valor : " + searchedTitleSerie)
     }

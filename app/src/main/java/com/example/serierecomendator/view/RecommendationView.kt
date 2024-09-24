@@ -42,34 +42,35 @@ import com.example.serierecomendator.viewModel.RecommendationViewModel
 @Composable
 fun RecommendationView(navController: NavHostController) {
     val recommendationViewModel: RecommendationViewModel = hiltViewModel()
-    var searchedTitleMovie by remember { mutableStateOf("")}
-
-    Log.d("MovieDBAPI2", "valor : " + recommendationViewModel.movies.value?.get(0)?.name)
+    var searchedTitleMovie by remember { mutableStateOf("") }
 
     val movies = recommendationViewModel.movies.observeAsState()
-   // var moviUrl = ""
+    // var moviUrl = ""
 
     Column {
         Text(text = "Recommendation")
 
-Row {
-    TextField(
-        modifier = Modifier
-            .clip(RoundedCornerShape(16.dp)) // Redondea las esquinas en 16 dp
-            .weight(0.8f),
-        value = searchedTitleMovie,
-        onValueChange = { searchedTitleMovie = it },
-        placeholder = { Text(searchedTitleMovie) })
+        Row {
+            TextField(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp)) // Redondea las esquinas en 16 dp
+                    .weight(0.8f),
+                value = searchedTitleMovie,
+                onValueChange = { searchedTitleMovie = it },
+                placeholder = { Text(searchedTitleMovie) })
 
-    Button(onClick = { recommendationViewModel.TitleToSearch(searchedTitleMovie) }) {
-        Icon(Icons.Default.Search, contentDescription = "Search Icon")
-    }
-}
-        
+            Button(onClick = { recommendationViewModel.TitleToSearch(searchedTitleMovie) }) {
+                Icon(Icons.Default.Search, contentDescription = "Search Icon")
+            }
+        }
 
-        LazyColumn {
-            if (movies.value != null) {
+        if (!movies.value.isNullOrEmpty()) {
+            LazyColumn {
+
                 movies.value!!.forEach { movie ->
+                    try {
+                    Log.d("MovieDBAPI", "valor: " + movie.name)
+
                     item {
                         Card(
                             modifier = Modifier
@@ -105,7 +106,8 @@ Row {
                                         text = movie.original_name,
                                         modifier = Modifier
                                             .fillMaxWidth(),
-                                        style = MaterialTheme.typography.labelSmall)
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
 
                                     Spacer(modifier = Modifier.height(15.dp))
 
@@ -114,19 +116,24 @@ Row {
                                         text = movie.first_air_date,
                                         modifier = Modifier
                                             .fillMaxWidth(),
-                                        style = MaterialTheme.typography.bodySmall)
-                                   // Text(text = movie.overview)
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                    // Text(text = movie.overview)
                                 }
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                         }
                     }
-                }
-            } else {
-                item {
-                    Text(text = "No hay películas")
+                    } catch (e: Exception) {
+                        Log.d("MovieDBAPI", "Error: " + e.message)
+                        Log.d("MovieDBAPI", "Error: " + e.stackTrace)
+                        Log.d("MovieDBAPI", "Error: " + e.cause)
+                    }
                 }
             }
+        }else{
+            Text(text = "No hay películas")
+            Log.d("MovieDBAPI", "No hay pelis")
         }
     }
 }
