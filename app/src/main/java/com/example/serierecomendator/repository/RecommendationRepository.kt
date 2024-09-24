@@ -14,10 +14,10 @@ import javax.inject.Inject
 class RecommendationRepository @Inject constructor(// Inyección de dependencias
     private val movieDBApi: MovieDBApi
 ) {
-    suspend fun getMovies(): SearchedMovie{
+    suspend fun getMovies(title: String): SearchedMovie{
         try {
             return withContext(Dispatchers.IO) {
-                val response = movieDBApi.listSeries("e32dd4598e7cb2f7dc42b4bf44d971c3", "EU")
+                val response = movieDBApi.listSeries("e32dd4598e7cb2f7dc42b4bf44d971c3", "EU", title, "es-ES")
                 response.body()!!
             }
         }catch (e: Exception){

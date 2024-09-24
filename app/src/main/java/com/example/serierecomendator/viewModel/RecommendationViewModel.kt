@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.serierecomendator.data.model.retrofit.Result
 import com.example.serierecomendator.repository.RecommendationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,15 +26,14 @@ class RecommendationViewModel @Inject constructor(
     private val _movies =MutableLiveData<List<Result>>()
     val movies: LiveData<List<Result>> get() = _movies
 
-
     init {
         viewModelScope.launch{
             try {
-                repository.getMovies()
-                var response = repository.getMovies()
+                repository.getMovies("dungeon+meshi")
+                var response = repository.getMovies("dungeon+meshi")
                 _movies.value = response.results
                 Log.d("MovieDBAPI", "llamada: " + response.results)
-                Log.d("MovieDBAPI", "Repository: " + repository.getMovies())
+                Log.d("MovieDBAPI", "Repository: " + repository.getMovies("dungeon+meshi"))
                 Log.d("MovieDBAPI", "valor primero : " + response.results[0].name)
                 Log.d("MovieDBAPI", "valor primero : " + response.results[1].name)
 
@@ -46,6 +46,15 @@ class RecommendationViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun TitleToSearch(title: String){
+        val searchedTitleSerie = title.replace(" ", "+")
+        viewModelScope.launch {
+            val searchResults = repository.getMovies(searchedTitleSerie)
+            _movies.value = searchResults.results
+        }
+        Log.d("buscador", "valor : " + searchedTitleSerie)
     }
 
 

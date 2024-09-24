@@ -12,13 +12,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +42,7 @@ import com.example.serierecomendator.viewModel.RecommendationViewModel
 @Composable
 fun RecommendationView(navController: NavHostController) {
     val recommendationViewModel: RecommendationViewModel = hiltViewModel()
+    var searchedTitleMovie by remember { mutableStateOf("")}
 
     Log.d("MovieDBAPI2", "valor : " + recommendationViewModel.movies.value?.get(0)?.name)
 
@@ -43,6 +51,22 @@ fun RecommendationView(navController: NavHostController) {
 
     Column {
         Text(text = "Recommendation")
+
+Row {
+    TextField(
+        modifier = Modifier
+            .clip(RoundedCornerShape(16.dp)) // Redondea las esquinas en 16 dp
+            .weight(0.8f),
+        value = searchedTitleMovie,
+        onValueChange = { searchedTitleMovie = it },
+        placeholder = { Text(searchedTitleMovie) })
+
+    Button(onClick = { recommendationViewModel.TitleToSearch(searchedTitleMovie) }) {
+        Icon(Icons.Default.Search, contentDescription = "Search Icon")
+    }
+}
+        
+
         LazyColumn {
             if (movies.value != null) {
                 movies.value!!.forEach { movie ->
