@@ -10,4 +10,5 @@ sealed class Screen(
     object Profile : Screen("profile screen")
     object Settings : Screen("settings screen")
     object EditProfile : Screen("edit profile")
+    object Search : Screen("search")
 }

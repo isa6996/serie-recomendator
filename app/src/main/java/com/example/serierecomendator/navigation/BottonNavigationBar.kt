@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,7 +20,8 @@ fun BottomNavigationBar(navController: NavHostController) {
     val items = listOf(
         Screen.Home,
         Screen.Profile,
-        Screen.Settings
+        Screen.Settings,
+        Screen.Search
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -34,6 +36,10 @@ fun BottomNavigationBar(navController: NavHostController) {
                         when (screen) {
                             is Screen.Home -> Icon(
                                 Icons.Default.Email,
+                                contentDescription = null
+                            )
+                            is Screen.Search -> Icon(
+                                Icons.Default.Search,
                                 contentDescription = null
                             )
                             is Screen.Settings -> Icon(
@@ -65,5 +71,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 }
 
 fun shouldShowBottomBar(route: String?): Boolean {
-    return route == Screen.Profile.route || route == Screen.Settings.route|| route == Screen.Home.route
+    return route == Screen.Profile.route || route == Screen.Search.route
+            || route == Screen.Settings.route|| route == Screen.Home.route
+
 }

@@ -22,7 +22,7 @@ fun Navigation(navController: NavHostController) {
             navController = navController,
             startDestination = Screen.Settings.route,
             route = SETTINGS_GRAPH_ROUTE,
-            screens = listOf(Screen.Settings, Screen.Profile, Screen.EditProfile, Screen.Home)
+            screens = listOf(Screen.Settings, Screen.Search, Screen.Profile, Screen.EditProfile, Screen.Home)
         )
     }
 }

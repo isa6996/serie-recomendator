@@ -32,7 +32,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.serierecomendator.viewModel.SearchViewModel
 
 @Composable
-fun RecommendationView(navController: NavHostController) {
+fun SearchView(navController: NavHostController) {
     val recommendationViewModel: SearchViewModel = hiltViewModel()
     var searchedTitleMovie by remember { mutableStateOf("") }
 
