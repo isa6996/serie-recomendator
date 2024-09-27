@@ -1,7 +1,5 @@
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +13,6 @@ import androidx.compose.material.Card
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,22 +23,17 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import com.example.serierecomendator.R
-import com.example.serierecomendator.viewModel.RecommendationViewModel
+import com.example.serierecomendator.viewModel.SearchViewModel
 
 @Composable
 fun RecommendationView(navController: NavHostController) {
-    val recommendationViewModel: RecommendationViewModel = hiltViewModel()
+    val recommendationViewModel: SearchViewModel = hiltViewModel()
     var searchedTitleMovie by remember { mutableStateOf("") }
 
     val movies = recommendationViewModel.movies.observeAsState()
@@ -118,6 +110,9 @@ fun RecommendationView(navController: NavHostController) {
                                             .fillMaxWidth(),
                                         style = MaterialTheme.typography.bodySmall
                                     )
+                                    Button(onClick = { recommendationViewModel.insertMovie(movie) }) {
+                                        Text(text = "recomendar")
+                                    }
                                     // Text(text = movie.overview)
                                 }
                             }

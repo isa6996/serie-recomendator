@@ -1,16 +1,14 @@
 package com.example.serierecomendator.viewModel
 
-import android.graphics.Movie
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.serierecomendator.data.model.retrofit.Result
+import com.example.serierecomendator.repository.MovieFirebaseRepository
 import com.example.serierecomendator.repository.RecommendationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,9 +17,11 @@ import javax.inject.Inject
  * el inject sirve para inyectar dependencias de la clase RecommendationRepository
  */
 @HiltViewModel
-class RecommendationViewModel @Inject constructor(
-    private val repository: RecommendationRepository
+class SearchViewModel @Inject constructor(
+    private val repository: RecommendationRepository,
+
 ): ViewModel() {
+    private val movieRepository: MovieFirebaseRepository = MovieFirebaseRepository()
 
     private val _movies =MutableLiveData<List<Result>>()
     val movies: LiveData<List<Result>> get() = _movies
@@ -68,5 +68,8 @@ class RecommendationViewModel @Inject constructor(
         Log.d("buscador", "valor : " + searchedTitleSerie)
     }
 
+fun insertMovie(movie: Result){
 
+    movieRepository.createMovies(movie.original_language, movie.original_name, movie.overview,movie.name)
+    }
 }
