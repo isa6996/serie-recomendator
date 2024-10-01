@@ -70,6 +70,6 @@ class SearchViewModel @Inject constructor(
 
 fun insertMovie(movie: Result){
 
-    movieRepository.createMovies(movie.original_language, movie.original_name, movie.overview,movie.name)
+    movieRepository.createMovies(movie.original_language, movie.original_name, movie.name, movie.overview)
     }
 }

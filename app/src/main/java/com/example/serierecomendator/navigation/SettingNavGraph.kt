@@ -35,7 +35,7 @@ fun NavGraphBuilder.addNavGraph(
                    is Screen.Profile -> ProfileView(navController)
                    is Screen.EditProfile -> EditProfileView(navController)
                    is Screen.Search -> SearchView(navController)
-                   else -> {}
+
                }
            }
         }
