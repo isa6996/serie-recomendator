@@ -16,7 +16,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 @HiltViewModel
 class RecomendationListViewModel@Inject constructor(
@@ -24,7 +26,9 @@ class RecomendationListViewModel@Inject constructor(
     private val userRepo: UserRepository
 ) : ViewModel() {
 
-    private val _recommendations: MutableStateFlow<List<Pair<MovieClass?, UserClass?>>> = MutableStateFlow(emptyList())
+    private val _recommendations: MutableStateFlow<List<Pair<MovieClass?, UserClass?>>> =
+        MutableStateFlow(emptyList())
+
     // Exponemos recomendaciones como StateFlow
     val recommendations: StateFlow<List<Pair<MovieClass?, UserClass?>>> get() = _recommendations
 
@@ -33,18 +37,17 @@ class RecomendationListViewModel@Inject constructor(
         getAllRecommendedMovies()
     }
 
-     fun getAllRecommendedMovies() {
+    fun getAllRecommendedMovies() {
 
         viewModelScope.launch {
             Log.d("serieInq", "a veeer: " + repo.getAllRecomendatedMoviesFB())
 
             repo.getAllRecomendatedMoviesFB().collect { movies ->
                 _recommendations.value = movies.map { movie ->
-                    // Suponiendo que el userId de la película es el recomendador
                     val user = getUserByIdAsync(movie?.userRecomendator ?: "")
                     Pair(movie, user)
                 }
-                Log.d("serieInq", "recomendated "+_recommendations.toString())
+                Log.d("serieInq", "recomendated " + _recommendations.toString())
             }
             Log.d("RecomendationListViewModel", "recomendated M : " + _recommendations.toString())
 
@@ -57,9 +60,13 @@ class RecomendationListViewModel@Inject constructor(
             userRepo.getUserById(userId) { user ->
                 if (continuation.isActive) {
                     continuation.resume(user)
+                } else {
+                    continuation.resumeWithException(CancellationException("Continuation is not active"))
                 }
+
             }
+
         }
     }
-
 }
+

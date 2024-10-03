@@ -12,13 +12,13 @@ import javax.inject.Inject
 class SettingsViewModel@Inject constructor(): ViewModel() {
     val userRepositoy = UserRepository()
     val auth = FirebaseAuth.getInstance()
-    val displayName= MutableStateFlow("")
     val imageUser= MutableStateFlow<Uri?>(null)
 
     fun updateCurrentUser(newDisplayName:String?, newImageUser:Uri?) {
         if (newDisplayName != null|| newImageUser != null) {
 
-            userRepositoy.updateUser(newDisplayName, newImageUser)
+                userRepositoy.updateUser(newDisplayName, newImageUser)
+
         }
     }
 

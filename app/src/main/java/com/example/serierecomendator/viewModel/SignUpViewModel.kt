@@ -11,12 +11,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel@Inject constructor(): ViewModel() {
-
+class SignUpViewModel @Inject constructor() : ViewModel() {
 
     private val auth: FirebaseAuth = Firebase.auth
     private val loadingUserExist = mutableStateOf(false)
-
 
     fun createUserWithEmailAndPassword(
         displayName: String,
@@ -34,19 +32,15 @@ class SignUpViewModel@Inject constructor(): ViewModel() {
                     }
                     loadingUserExist.value = false
                 }
-
         }
-
-
     }
 
     private fun createUser(displayName: String) {
         Log.d("create User", "createUserWithEmail:success")
-          UserRepository().createUserRepository(
-
-                    userId= auth.currentUser?.uid.toString(),
-                    displayName = displayName
-
-                )
+        UserRepository().createUserRepository(
+            userId = auth.currentUser?.uid.toString(),
+            displayName = displayName,
+             userImage = ""
+        )
     }
 }

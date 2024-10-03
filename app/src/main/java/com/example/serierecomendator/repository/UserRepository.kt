@@ -11,6 +11,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 
@@ -23,20 +24,28 @@ class UserRepository {
     fun createUserRepository(
         userId: String,
         displayName: String,
-    ) {
+        userImage: String
+    ) = runBlocking {
         Log.d("create User", "createUserWithEmail:success")
-        val user = UserClass()
-        userId.let { user.userId = it }
-        displayName.let { user.displayName = it }
-
-        db.collection("users").add(user).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d("create User", "deberia salir" + db.toString())
-            } else {
-                Log.d("create User", "createUserWithEmail:failure ", task.exception)
-            }
+        val user = UserClass().apply {
+            this.userId = userId
+            this.displayName = displayName
         }
+        val ref = "user profile/null.jpg"
+        val storageReference = Firebase.storage.getReference(ref)
 
+        try {
+            val uri = storageReference.downloadUrl.await()
+            val imageURL = uri.toString()
+            Log.d("image", "Image URL: $imageURL")
+            user.userImage = imageURL
+            Log.d("image", "userImage URL: ${user.userImage}")
+
+            db.collection("users").add(user).await()
+            Log.d("create User", "User added successfully")
+        } catch (e: Exception) {
+            Log.d("create User", "createUserWithEmail:failure", e)
+        }
     }
 
     fun getUserById(userId: String ,callback: (UserClass?) -> Unit) {
@@ -64,12 +73,10 @@ class UserRepository {
                 .get()
                 .addOnSuccessListener {
                     val user = it.firstOrNull()?.toObject(UserClass::class.java)
-                    if (newDisplayName != user?.displayName) {
+                    if (!newDisplayName.isNullOrEmpty()) {
                         user?.displayName = newDisplayName.toString()
                     }
-                    else {
-                        user?.displayName = user?.displayName.toString()
-                    }
+
                     if (imageUri != null) {
                         val ref = "user profile/${currentUserId}.jpg"
                         val storageReference = Firebase.storage.getReference(ref)

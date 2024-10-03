@@ -23,19 +23,11 @@ class ProfileViewModel @Inject constructor(): ViewModel() {
 
     fun userInformation() {
         val userId = Firebase.auth.currentUser?.uid
-        var userImageString = ""
 
         UserRepository().getUserById(userId.toString()) { user ->
             user?.let {
                 userName.value = user.displayName
-                userImageString = user.userImage
-                Log.d("profile", "userImage: $userImageString")
-
-                // Fetch the user image URL
-                UserRepository().getUserImage(userId, userImageString) { imageURL ->
-                    userIma.value = imageURL
-                    Log.d("profile", "Final userImage URL: $imageURL")
-                }
+                userIma.value = user.userImage
             }
         }
     }
