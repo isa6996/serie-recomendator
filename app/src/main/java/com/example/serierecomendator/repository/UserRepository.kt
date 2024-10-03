@@ -7,7 +7,12 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.tasks.await
+
 
 class UserRepository {
 
@@ -34,9 +39,9 @@ class UserRepository {
 
     }
 
-    fun getUserById(callback: (UserClass?) -> Unit) {
+    fun getUserById(userId: String ,callback: (UserClass?) -> Unit) {
         db.collection("users")
-            .whereEqualTo("userId", currentUserId)
+            .whereEqualTo("userId", userId)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -62,6 +67,9 @@ class UserRepository {
                     if (newDisplayName != user?.displayName) {
                         user?.displayName = newDisplayName.toString()
                     }
+                    else {
+                        user?.displayName = user?.displayName.toString()
+                    }
                     if (imageUri != null) {
                         val ref = "user profile/${currentUserId}.jpg"
                         val storageReference = Firebase.storage.getReference(ref)
@@ -82,6 +90,21 @@ class UserRepository {
                 }
                 .addOnSuccessListener { Log.d("User", "DocumentSnapshot successfully written!") }
                 .addOnFailureListener { e -> Log.w("User", "Error writing document", e) }
+        }
+    }
+
+    fun getUserImage(userId: String?, refImage: String, callback: (String) -> Unit) {
+        val ref = "user profile/${userId ?: "null"}.jpg" // Handle null userId
+        val ref2 = "user profile/null.jpg"
+        val storageReference = Firebase.storage.getReference(if (refImage == ref2) ref2 else ref)
+
+        storageReference.downloadUrl.addOnSuccessListener { uri ->
+            val imageURL = uri.toString()
+            Log.d("image", "Image URL: $imageURL")
+            callback(imageURL)
+        }.addOnFailureListener {
+            Log.d("image", "Failed to get image URL")
+            callback("") // Return an empty string or handle the error as needed
         }
     }
 

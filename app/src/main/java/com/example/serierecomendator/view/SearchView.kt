@@ -62,7 +62,6 @@ fun SearchView(navController: NavHostController) {
                 movies.value!!.forEach { movie ->
                     try {
                     Log.d("MovieDBAPI", "valor: " + movie.name)
-
                     item {
                         Card(
                             modifier = Modifier

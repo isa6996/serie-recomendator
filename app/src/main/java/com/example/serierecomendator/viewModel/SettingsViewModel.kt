@@ -18,7 +18,6 @@ class SettingsViewModel@Inject constructor(): ViewModel() {
     fun updateCurrentUser(newDisplayName:String?, newImageUser:Uri?) {
         if (newDisplayName != null|| newImageUser != null) {
 
-
             userRepositoy.updateUser(newDisplayName, newImageUser)
         }
     }

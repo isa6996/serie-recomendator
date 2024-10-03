@@ -28,6 +28,10 @@ object RepositoryModule {
     fun provideMovieFirebaseRepository(): MovieFirebaseRepository {
         return MovieFirebaseRepository()
     }
+    @Provides
+    fun provideUserRepository(): UserRepository {
+        return UserRepository() // Asegúrate de que UserRepository tenga un constructor disponible
+    }
 }
 class MovieFirebaseRepository {
     val db = FirebaseFirestore.getInstance()
@@ -37,7 +41,7 @@ class MovieFirebaseRepository {
     fun getAllRecomendatedMoviesFB(): Flow<List<MovieClass?>> {
         return flow {
             val snapshot = db.collection("movies")
-                .whereIn("userRecomendator", listOf(userId, null))
+       //         .whereIn("userRecomendator", listOf(userId, null))
                 .get().await()
             val movies = snapshot.toObjects(MovieClass::class.java)
             emit(movies)
@@ -47,7 +51,7 @@ class MovieFirebaseRepository {
         }
     }
 
-    fun getUserRecomendedMoviesFB(): Flow<List<MovieClass?>> {
+   /* fun getUserRecomendedMoviesFB(): Flow<List<MovieClass?>> {
         return flow {
             val snapshot = db.collection("movies")
                 .whereEqualTo("userRecomendator", userId)// cambiar por user
@@ -57,7 +61,7 @@ class MovieFirebaseRepository {
         }.catch { throwable ->
             println("Error fetching movies: $throwable")
         }
-    }
+    }*/
 
     fun createMovies(
         language: String,

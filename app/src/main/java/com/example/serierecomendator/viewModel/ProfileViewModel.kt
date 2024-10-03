@@ -21,35 +21,20 @@ class ProfileViewModel @Inject constructor(): ViewModel() {
         userInformation()
     }
 
-    fun userInformation(){
+    fun userInformation() {
         val userId = Firebase.auth.currentUser?.uid
+        var userImageString = ""
 
-        val ref = "user profile/${userId}.jpg"// Referencia de la imagen en Firebase Storage
-        val ref2 = "user profile/null.jpg"
-        var imageURL = ""
-        val storageReferenceNull = Firebase.storage.getReference(ref2)
-        val storageReference = Firebase.storage.getReference(ref)
-
-        UserRepository().getUserById(){user ->
+        UserRepository().getUserById(userId.toString()) { user ->
             user?.let {
                 userName.value = user.displayName
+                userImageString = user.userImage
+                Log.d("profile", "userImage: $userImageString")
 
-                if(user.userImage == ref2) {
-                    storageReferenceNull.downloadUrl.addOnSuccessListener {// Obtiene la URL de la imagen subida
-                        imageURL = it.toString()
-                        Log.d("image", "image por defecto : " + imageURL)
-                        userIma.value = imageURL
-                    }
-                }
-                else{
-                    storageReference.downloadUrl.addOnSuccessListener {// Obtiene la URL de la imagen subida
-                        imageURL = it.toString()
-                        Log.d("image", "image subida por el user: " + imageURL)
-                        Log.d("image", "id del user: " + user.userId)
-
-                        userIma.value = imageURL
-                    }
-
+                // Fetch the user image URL
+                UserRepository().getUserImage(userId, userImageString) { imageURL ->
+                    userIma.value = imageURL
+                    Log.d("profile", "Final userImage URL: $imageURL")
                 }
             }
         }

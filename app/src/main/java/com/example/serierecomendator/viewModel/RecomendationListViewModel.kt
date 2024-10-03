@@ -6,21 +6,28 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.serierecomendator.data.model.user.MovieClass
+import com.example.serierecomendator.data.model.user.UserClass
 import com.example.serierecomendator.repository.MovieFirebaseRepository
+import com.example.serierecomendator.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
 @HiltViewModel
 class RecomendationListViewModel@Inject constructor(
-    private val repo: MovieFirebaseRepository
+    private val repo: MovieFirebaseRepository,
+    private val userRepo: UserRepository
 ) : ViewModel() {
 
-    private val _recommendedMovies: MutableStateFlow<List<MovieClass?>> = MutableStateFlow(emptyList())
-    val recommendedMovies: StateFlow<List<MovieClass?>> = _recommendedMovies
+    private val _recommendations: MutableStateFlow<List<Pair<MovieClass?, UserClass?>>> = MutableStateFlow(emptyList())
+    // Exponemos recomendaciones como StateFlow
+    val recommendations: StateFlow<List<Pair<MovieClass?, UserClass?>>> get() = _recommendations
+
 
     init {
         getAllRecommendedMovies()
@@ -32,11 +39,26 @@ class RecomendationListViewModel@Inject constructor(
             Log.d("serieInq", "a veeer: " + repo.getAllRecomendatedMoviesFB())
 
             repo.getAllRecomendatedMoviesFB().collect { movies ->
-                _recommendedMovies.value = movies
-                Log.d("serieInq", "recomendated "+_recommendedMovies.value.toString())
+                _recommendations.value = movies.map { movie ->
+                    // Suponiendo que el userId de la película es el recomendador
+                    val user = getUserByIdAsync(movie?.userRecomendator ?: "")
+                    Pair(movie, user)
+                }
+                Log.d("serieInq", "recomendated "+_recommendations.toString())
             }
-            Log.d("RecomendationListViewModel", "recomendated M : " + _recommendedMovies.toString())
+            Log.d("RecomendationListViewModel", "recomendated M : " + _recommendations.toString())
 
+        }
+    }
+
+    private suspend fun getUserByIdAsync(userId: String): UserClass? {
+        return suspendCancellableCoroutine { continuation ->
+            // Llamamos a getUserById y pasamos un callback que reanuda la coroutine
+            userRepo.getUserById(userId) { user ->
+                if (continuation.isActive) {
+                    continuation.resume(user)
+                }
+            }
         }
     }
 
