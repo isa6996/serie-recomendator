@@ -31,6 +31,7 @@ class UserRepository {
             this.userId = userId
             this.displayName = displayName
         }
+
         val ref = "user profile/null.jpg"
         val storageReference = Firebase.storage.getReference(ref)
 
@@ -41,8 +42,7 @@ class UserRepository {
             user.userImage = imageURL
             Log.d("image", "userImage URL: ${user.userImage}")
 
-            db.collection("users").add(user).await()
-            Log.d("create User", "User added successfully")
+            db.collection("users").document(userId).set(user).await()
         } catch (e: Exception) {
             Log.d("create User", "createUserWithEmail:failure", e)
         }
@@ -57,11 +57,13 @@ class UserRepository {
                     val document = task.result?.documents
                     val user = document?.firstOrNull()?.toObject(UserClass::class.java)
                     callback(user)
+
+                    Log.d("crearid", "tienen el mismo id: " + user?.userId)
+                    Log.d("crearid", "tienen el mismo id: " + currentUserId.toString())
+
                     Log.d("User", "user: " + user?.displayName)
                     Log.d("User", "userid " + user?.userId)
-                    Log.d("User", "id current user " + currentUserId.toString())
                 }
-                Log.d("User", "user despues del if : " + currentUserId.toString())
             }
     }
 
@@ -82,37 +84,39 @@ class UserRepository {
                         val storageReference = Firebase.storage.getReference(ref)
                         storageReference.putFile(imageUri)
                             .addOnSuccessListener {
-                                storageReference.downloadUrl.addOnSuccessListener { uri -> // Obtiene la URL de la imagen subida}
+                                storageReference.downloadUrl.addOnSuccessListener { uri ->
                                     val imageURL = uri.toString()
+                                    Log.d("image", "Image URL: $imageURL")
                                     user?.userImage = imageURL
+
+                                    // Update Firestore with the new user data
+                                    db.collection("users").document(currentUserId).set(user!!)
+                                        .addOnSuccessListener {
+                                            Log.d("User", "DocumentSnapshot successfully written!")
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.w("User", "Error writing document", e)
+                                        }
+                                }.addOnFailureListener { e ->
+                                    Log.w("image", "Failed to get image URL", e)
                                 }
+                            }.addOnFailureListener { e ->
+                                Log.w("image", "Failed to upload image", e)
                             }
-                        user?.userImage = storageReference.toString()
-                        Log.d("User", "referencia qie deberioa ser  : " + storageReference.toString())
-                        Log.d("User", "referencia qie es  : " + user?.userImage)
-
+                    } else {
+                        // Update Firestore with the new display name only
+                        db.collection("users").document(currentUserId).set(user!!)
+                            .addOnSuccessListener {
+                                Log.d("User", "DocumentSnapshot successfully written!")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w("User", "Error writing document", e)
+                            }
                     }
-                    db.collection("users").document(currentUserId).set(user!!)
-
                 }
-                .addOnSuccessListener { Log.d("User", "DocumentSnapshot successfully written!") }
-                .addOnFailureListener { e -> Log.w("User", "Error writing document", e) }
+                .addOnFailureListener { e ->
+                    Log.w("User", "Error getting document", e)
+                }
         }
     }
-
-    fun getUserImage(userId: String?, refImage: String, callback: (String) -> Unit) {
-        val ref = "user profile/${userId ?: "null"}.jpg" // Handle null userId
-        val ref2 = "user profile/null.jpg"
-        val storageReference = Firebase.storage.getReference(if (refImage == ref2) ref2 else ref)
-
-        storageReference.downloadUrl.addOnSuccessListener { uri ->
-            val imageURL = uri.toString()
-            Log.d("image", "Image URL: $imageURL")
-            callback(imageURL)
-        }.addOnFailureListener {
-            Log.d("image", "Failed to get image URL")
-            callback("") // Return an empty string or handle the error as needed
-        }
-    }
-
 }

@@ -24,6 +24,8 @@ class ProfileViewModel @Inject constructor(): ViewModel() {
     fun userInformation() {
         val userId = Firebase.auth.currentUser?.uid
 
+        Log.d("crearid", userId.toString())
+
         UserRepository().getUserById(userId.toString()) { user ->
             user?.let {
                 userName.value = user.displayName

@@ -26,6 +26,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        Log.d("crearid", "createUserWithEmail:success "+ auth.currentUser?.uid)
                         createUser(displayName)
                     } else {
                         Log.d("create User", "createUserWithEmail:failure ", task.exception)
