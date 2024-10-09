@@ -51,27 +51,16 @@ class MovieFirebaseRepository {
         }
     }
 
-   /* fun getUserRecomendedMoviesFB(): Flow<List<MovieClass?>> {
-        return flow {
-            val snapshot = db.collection("movies")
-                .whereEqualTo("userRecomendator", userId)// cambiar por user
-                .get().await()
-            val movies = snapshot.toObjects(MovieClass::class.java)
-            emit(movies)
-        }.catch { throwable ->
-            println("Error fetching movies: $throwable")
-        }
-    }*/
-
     fun createMovies(
         language: String,
         originalTitle: String,
         title: String,
         sinopsis: String,
-        //image: String
+        id: Int,
+        image: String
     ) {
         val userDisplayNameId= userId
-        val movie = MovieClass(userId, language, originalTitle,title, sinopsis,  "null")
+        val movie = MovieClass(userId, language, originalTitle,title, sinopsis, id, image)
 
         db.collection("movies").add(movie).addOnCompleteListener {
             task ->

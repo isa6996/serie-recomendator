@@ -28,7 +28,6 @@ class RecomendationListViewModel@Inject constructor(
 
     private val _recommendations: MutableStateFlow<List<Pair<MovieClass?, UserClass?>>> =
         MutableStateFlow(emptyList())
-
     // Exponemos recomendaciones como StateFlow
     val recommendations: StateFlow<List<Pair<MovieClass?, UserClass?>>> get() = _recommendations
 

@@ -6,5 +6,6 @@ data class MovieClass (
     val originalTitle: String = "",
     val title: String = "",
     val sinopsis: String = "",
+    val id: Int = 0,
     val image: String = ""
 )

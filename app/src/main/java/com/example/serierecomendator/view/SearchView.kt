@@ -33,11 +33,11 @@ import com.example.serierecomendator.viewModel.SearchViewModel
 
 @Composable
 fun SearchView(navController: NavHostController) {
-    val recommendationViewModel: SearchViewModel = hiltViewModel()
+    val searchVM: SearchViewModel = hiltViewModel()
     var searchedTitleMovie by remember { mutableStateOf("") }
 
-    val movies = recommendationViewModel.movies.observeAsState()
-    // var moviUrl = ""
+    val movies = searchVM.movies.observeAsState()
+
 
     Column {
         Text(text = "Recommendation")
@@ -51,7 +51,7 @@ fun SearchView(navController: NavHostController) {
                 onValueChange = { searchedTitleMovie = it },
                 placeholder = { Text(searchedTitleMovie) })
 
-            Button(onClick = { recommendationViewModel.TitleToSearch(searchedTitleMovie) }) {
+            Button(onClick = { searchVM.TitleToSearch(searchedTitleMovie) }) {
                 Icon(Icons.Default.Search, contentDescription = "Search Icon")
             }
         }
@@ -74,7 +74,7 @@ fun SearchView(navController: NavHostController) {
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Image(
-                                    painter = rememberAsyncImagePainter(model = "https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}"),
+                                    painter = rememberAsyncImagePainter(model = "${searchVM.urlStringMovie}${movie.poster_path}"),
                                     contentDescription = "Movie poster for ${movie.name}",
                                     modifier = Modifier
                                         .fillMaxWidth(0.5f) // Occupy 50% of the width
@@ -109,7 +109,7 @@ fun SearchView(navController: NavHostController) {
                                             .fillMaxWidth(),
                                         style = MaterialTheme.typography.bodySmall
                                     )
-                                    Button(onClick = { recommendationViewModel.insertMovie(movie) }) {
+                                    Button(onClick = { searchVM.insertMovie(movie) }) {
                                         Text(text = "recomendar")
                                     }
                                     // Text(text = movie.overview)
