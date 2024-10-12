@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.serierecomendator.data.model.retrofit.Result
+import com.example.serierecomendator.data.model.retrofit.urlStringMovie
 import com.example.serierecomendator.repository.MovieFirebaseRepository
 import com.example.serierecomendator.repository.RecommendationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,8 +26,6 @@ class SearchViewModel @Inject constructor(
 
     private val _movies =MutableLiveData<List<Result>>()
     val movies: LiveData<List<Result>> get() = _movies
-
-    val urlStringMovie="https://image.tmdb.org/t/p/w600_and_h900_bestv2"
 
     fun TitleToSearch(title: String){
         val searchedTitleSerie = title.replace(" ", "+")
@@ -48,10 +47,10 @@ class SearchViewModel @Inject constructor(
         Log.d("buscador", "valor : " + searchedTitleSerie)
     }
 
-fun insertMovie(movie: Result){
+fun insertMovie(movie: Result, recommendationText: String) {
     val moviePoster=urlStringMovie+movie.poster_path
 
     movieRepository.createMovies(movie.original_language, movie.original_name, movie.name,
-        movie.overview, movie.id, moviePoster)
+        movie.overview, movie.id, moviePoster, recommendationText)
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,11 +31,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.serierecomendator.viewModel.SearchViewModel
+import com.example.serierecomendator.data.model.retrofit.Result
+import com.example.serierecomendator.data.model.retrofit.urlStringMovie
 
 @Composable
 fun SearchView(navController: NavHostController) {
     val searchVM: SearchViewModel = hiltViewModel()
     var searchedTitleMovie by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
+    var recommendationText by remember { mutableStateOf("") }
+    var selectedMovie by remember { mutableStateOf<Result?>(null) } // Asegúrate de que Result esté definido
 
     val movies = searchVM.movies.observeAsState()
 
@@ -74,7 +80,7 @@ fun SearchView(navController: NavHostController) {
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Image(
-                                    painter = rememberAsyncImagePainter(model = "${searchVM.urlStringMovie}${movie.poster_path}"),
+                                    painter = rememberAsyncImagePainter(model = "${urlStringMovie}${movie.poster_path}"),
                                     contentDescription = "Movie poster for ${movie.name}",
                                     modifier = Modifier
                                         .fillMaxWidth(0.5f) // Occupy 50% of the width
@@ -109,11 +115,14 @@ fun SearchView(navController: NavHostController) {
                                             .fillMaxWidth(),
                                         style = MaterialTheme.typography.bodySmall
                                     )
-                                    Button(onClick = { searchVM.insertMovie(movie) }) {
-                                        Text(text = "recomendar")
+                                    Button(onClick = {
+                                        selectedMovie = movie // Guardar el movie seleccionado
+                                        showDialog = true
+                                    }) {
+                                        Text(text = "Recomendar")
                                     }
-                                    // Text(text = movie.overview)
                                 }
+
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                         }
@@ -129,5 +138,38 @@ fun SearchView(navController: NavHostController) {
             Text(text = "No hay películas")
             Log.d("MovieDBAPI", "No hay pelis")
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "Deja tu opinión?") },
+            text = {
+                TextField(
+                    value = recommendationText,
+                    onValueChange = { recommendationText = it },
+                    label = { Text("Por que es un must be? (opcional)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        selectedMovie?.let { movie ->
+                            searchVM.insertMovie(movie, recommendationText)
+                        }
+                        showDialog = false
+                        recommendationText = "" // Reiniciar el texto
+                    }
+                ) {
+                    Text("Enviar")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }

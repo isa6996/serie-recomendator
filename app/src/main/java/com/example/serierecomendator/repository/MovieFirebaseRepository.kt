@@ -57,10 +57,11 @@ class MovieFirebaseRepository {
         title: String,
         sinopsis: String,
         id: Int,
-        image: String
+        image: String,
+        opinion: String
     ) {
         val userDisplayNameId= userId
-        val movie = MovieClass(userId, language, originalTitle,title, sinopsis, id, image)
+        val movie = MovieClass(userId, language, originalTitle,title, sinopsis, id, image, opinion)
 
         db.collection("movies").add(movie).addOnCompleteListener {
             task ->

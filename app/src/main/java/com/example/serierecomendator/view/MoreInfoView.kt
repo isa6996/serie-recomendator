@@ -77,17 +77,32 @@ fun MoreInfoView(movieId: Int) {
                                 .padding(8.dp))
                         Text(text = " ${selectedMovie.first?.sinopsis}")
 
-                        Text(text = "Usuario que la recomendó",
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier
-                                .padding(8.dp))
-                        Text(text = "${selectedMovie.second?.displayName}")
+                        if (!selectedMovie.first?.opinion.isNullOrEmpty()) {
+                            Text(
+                                text = "Porque ver ${selectedMovie.first?.title}?",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier
+                                    .padding(8.dp)
+                            )
+                            Text(text = "Escucha la opinion de ${selectedMovie.second?.displayName}:")
+                            Text(text = "${selectedMovie.first?.opinion}")
+                        }
+                        else {
+                            Text(text = "recomendada por:",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier
+                                .padding(8.dp)
+                            )
+
+                            Text(text = "${selectedMovie.second?.displayName}")
+
+                        }
                     }
 
                 }
             }
         } else {
-            Text(text = "hay un error")
+            Text(text = "Cargando...")
         }
     }
 }

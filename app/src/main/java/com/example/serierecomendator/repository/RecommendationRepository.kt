@@ -2,6 +2,7 @@ package com.example.serierecomendator.repository
 
 import android.util.Log
 import com.example.serierecomendator.data.model.retrofit.SearchedMovie
+import com.example.serierecomendator.data.model.retrofit.API_KEY
 import com.example.serierecomendator.network.MovieDBApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,7 +18,7 @@ class RecommendationRepository @Inject constructor(// Inyección de dependencia
     suspend fun getMovies(title: String): SearchedMovie{
         try {
             return withContext(Dispatchers.IO) {
-                val response = movieDBApi.listSeries("e32dd4598e7cb2f7dc42b4bf44d971c3", "EU", title, "es-ES")
+                val response = movieDBApi.listSeries(API_KEY, "EU", title, "es-ES")
                 response.body()!!
             }
         }catch (e: Exception){
