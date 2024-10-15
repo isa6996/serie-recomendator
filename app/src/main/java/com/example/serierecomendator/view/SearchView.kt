@@ -1,5 +1,8 @@
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,12 +31,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.serierecomendator.viewModel.SearchViewModel
 import com.example.serierecomendator.data.model.retrofit.Result
+import com.example.serierecomendator.data.model.retrofit.ResultMovies
 import com.example.serierecomendator.data.model.retrofit.urlStringMovie
 
 @Composable
@@ -44,9 +52,55 @@ fun SearchView(navController: NavHostController) {
 
     val movies = searchVM.movies.observeAsState()
 
+    var expanded by remember { mutableStateOf(false) }
+    var mediaType by remember { mutableStateOf("tv") }
+    val options = listOf("Series", "Películas", "Mangas", "Webtoons", "Novelas")
+    var selectedOption by remember { mutableStateOf(options[0]) }
+
 
     Column {
         Text(text = "Recommendation")
+
+        Row {
+            Text(text = "Media Type:", modifier = Modifier.padding(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .background(Color(0xFF800080), RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(16.dp)),
+            ) {
+                Text(
+                    text = selectedOption,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { expanded = true }
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    options.forEach { option ->
+                        DropdownMenuItem(text = { Text(text = option) }, onClick = {
+                            selectedOption = option
+                            mediaType = when (option) {
+                                "Series / Anime" -> "tv"
+                                "Películas" -> "movie"
+                                "Man(g/h/hw)as" -> "manga"
+                                "Webtoons" -> "webtoon"
+                                "Novelas" -> "novel"
+                                else -> "movie"
+                            }
+                            expanded = false
+                        }
+                        )
+                    }
+                }
+            }
+        }
 
         Row {
             TextField(
@@ -57,7 +111,7 @@ fun SearchView(navController: NavHostController) {
                 onValueChange = { searchedTitleMovie = it },
                 placeholder = { Text(searchedTitleMovie) })
 
-            Button(onClick = { searchVM.TitleToSearch(searchedTitleMovie) }) {
+            Button(onClick = { searchVM.TitleToSearch(searchedTitleMovie, mediaType) }) {
                 Icon(Icons.Default.Search, contentDescription = "Search Icon")
             }
         }

@@ -15,12 +15,15 @@ import javax.inject.Inject
 class RecommendationRepository @Inject constructor(// Inyección de dependencias
     private val movieDBApi: MovieDBApi
 ) {
-    suspend fun getMovies(title: String): SearchedMovie{
+    suspend fun getMovies(title: String, type: String): SearchedMovie{
         try {
+            Log.d("MovieDBAPI", "sara : " + movieDBApi.listSeries(API_KEY, "EU", title, "es-ES"))
             return withContext(Dispatchers.IO) {
-                val response = movieDBApi.listSeries(API_KEY, "EU", title, "es-ES")
+                val response = movieDBApi.listSeries(type, API_KEY, "EU", title, "es-ES")
                 response.body()!!
+
             }
+
         }catch (e: Exception){
             Log.d("MovieDBAPI", "Error: " + e.message)
             Log.d("MovieDBAPI", "Error: " + e.stackTrace)

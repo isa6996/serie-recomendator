@@ -27,11 +27,11 @@ class SearchViewModel @Inject constructor(
     private val _movies =MutableLiveData<List<Result>>()
     val movies: LiveData<List<Result>> get() = _movies
 
-    fun TitleToSearch(title: String){
+    fun TitleToSearch(title: String, type: String) {
         val searchedTitleSerie = title.replace(" ", "+")
         viewModelScope.launch {
             try {
-                val searchResults = repository.getMovies(searchedTitleSerie)
+                val searchResults = repository.getMovies(searchedTitleSerie, type)
                 _movies.value = searchResults.results
                 Log.d("MovieDBAPI", "llamada: " + searchResults.results)
             }catch ( e: Exception){
