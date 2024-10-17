@@ -1,17 +1,17 @@
 package com.example.serierecomendator.data.model.retrofit
 
-data class Result(
+data class ResultTv(
+     val id: Int,
+     val overview: String,
+     val poster_path: String,
+     val original_language: String,
+    val original_name: String,
+    val name: String,
     val adult: Boolean,
     val backdrop_path: String,
     val genre_ids: List<Int>,
-    val id: Int,
-    val original_language: String,
-    val original_name: String,
-    val overview: String,
     val popularity: Double,
-    val poster_path: String,
-    val first_air_date: String,
-    val name: String,
+     val first_air_date: String,
     val video: Boolean,
     val vote_average: Double,
     val vote_count: Int

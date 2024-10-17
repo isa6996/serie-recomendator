@@ -2,15 +2,11 @@ package com.example.serierecomendator.repository
 
 import android.net.Uri
 import android.util.Log
-import com.example.serierecomendator.data.model.user.UserClass
+import com.example.serierecomendator.data.model.classes.UserClass
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 

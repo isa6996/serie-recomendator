@@ -1,24 +1,18 @@
 package com.example.serierecomendator.repository
 
 import android.util.Log
-import com.example.serierecomendator.data.model.user.MovieClass
-import com.google.android.gms.tasks.Task
+import com.example.serierecomendator.data.model.classes.MovieClass
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.snapshots
 import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 @Module
 @InstallIn(SingletonComponent::class)

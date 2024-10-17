@@ -37,9 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.serierecomendator.data.model.classes.MediaType
 import com.example.serierecomendator.viewModel.SearchViewModel
-import com.example.serierecomendator.data.model.retrofit.Result
-import com.example.serierecomendator.data.model.retrofit.ResultMovies
 import com.example.serierecomendator.data.model.retrofit.urlStringMovie
 
 @Composable
@@ -48,13 +47,13 @@ fun SearchView(navController: NavHostController) {
     var searchedTitleMovie by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var recommendationText by remember { mutableStateOf("") }
-    var selectedMovie by remember { mutableStateOf<Result?>(null) } // Asegúrate de que Result esté definido
+  //  var selectedMovie by remember { mutableStateOf<finalResults?>(null) } // Asegúrate de que Result esté definido
 
-    val movies = searchVM.movies.observeAsState()
+    val finalResults = searchVM.finalSearchResults.observeAsState()
 
     var expanded by remember { mutableStateOf(false) }
-    var mediaType by remember { mutableStateOf("tv") }
-    val options = listOf("Series", "Películas", "Mangas", "Webtoons", "Novelas")
+    var mediaType by remember { mutableStateOf<MediaType>(MediaType.Tv) }
+    val options = listOf("Series / Anime", "Películas", "Man(g/h/hw)as", "Webtoons", "Novelas")
     var selectedOption by remember { mutableStateOf(options[0]) }
 
 
@@ -87,12 +86,12 @@ fun SearchView(navController: NavHostController) {
                         DropdownMenuItem(text = { Text(text = option) }, onClick = {
                             selectedOption = option
                             mediaType = when (option) {
-                                "Series / Anime" -> "tv"
-                                "Películas" -> "movie"
-                                "Man(g/h/hw)as" -> "manga"
-                                "Webtoons" -> "webtoon"
-                                "Novelas" -> "novel"
-                                else -> "movie"
+                                "Series / Anime" -> MediaType.Tv
+                                "Películas" -> MediaType.Movie
+                                "Man(g/h/hw)as" -> MediaType.Manga
+                                "Webtoons" -> MediaType.Webtoon
+                                "Novelas" -> MediaType.Novel
+                                else -> MediaType.Tv
                             }
                             expanded = false
                         }
@@ -111,76 +110,79 @@ fun SearchView(navController: NavHostController) {
                 onValueChange = { searchedTitleMovie = it },
                 placeholder = { Text(searchedTitleMovie) })
 
-            Button(onClick = { searchVM.TitleToSearch(searchedTitleMovie, mediaType) }) {
+            Button(onClick = { searchVM.searchTitle(searchedTitleMovie, mediaType)
+            Log.d("type", "despues de search: " + mediaType ) }) {
                 Icon(Icons.Default.Search, contentDescription = "Search Icon")
             }
         }
 
-        if (!movies.value.isNullOrEmpty()) {
+        if (!finalResults.value.isNullOrEmpty()) {
             LazyColumn {
-
-                movies.value!!.forEach { movie ->
+                finalResults.value!!.forEach { result ->
                     try {
-                    Log.d("MovieDBAPI", "valor: " + movie.name)
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            elevation = 4.dp
-                        ) {
-
-                            Row( // Use Row to arrange elements horizontally within the item
-                                modifier = Modifier.fillMaxWidth()
+                        Log.d("MovieDBAPI", "valor: " + result.title)
+                        item {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                elevation = 4.dp
                             ) {
-                                Image(
-                                    painter = rememberAsyncImagePainter(model = "${urlStringMovie}${movie.poster_path}"),
-                                    contentDescription = "Movie poster for ${movie.name}",
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.5f) // Occupy 50% of the width
-                                        .height(200.dp)
-                                        .clip(RoundedCornerShape(8.dp)),
-                                )
-                                Spacer(modifier = Modifier.width(8.dp)) // Add spacing between image and text
-                                Column( // Use Column to stack text elements vertically
+
+                                Row( // Use Row to arrange elements horizontally within the item
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Spacer(modifier = Modifier.height(15.dp))
-                                    Text(
-                                        text = movie.name,
+                                    Log.d("type", "valor: " + result.type)
+                                    Image(
+                                        painter = rememberAsyncImagePainter(model = "${urlStringMovie}${result.posterPath}"),
+                                        contentDescription = "Movie poster for ${result.title}",
                                         modifier = Modifier
-                                            .fillMaxWidth(),
-                                        style = MaterialTheme.typography.titleLarge
+                                            .fillMaxWidth(0.5f) // Occupy 50% of the width
+                                            .height(200.dp)
+                                            .clip(RoundedCornerShape(8.dp)),
                                     )
+                                    Spacer(modifier = Modifier.width(8.dp)) // Add spacing between image and text
+                                    Column( // Use Column to stack text elements vertically
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Spacer(modifier = Modifier.height(15.dp))
+                                        Text(
+                                            text = result.title?: "",
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            style = MaterialTheme.typography.titleLarge
+                                        )
 
-                                    Text(
-                                        text = movie.original_name,
-                                        modifier = Modifier
-                                            .fillMaxWidth(),
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
+                                        Text(
+                                            text = result.originalTitle?: "",
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
 
-                                    Spacer(modifier = Modifier.height(15.dp))
+                                        Spacer(modifier = Modifier.height(15.dp))
 
 
-                                    Text(
-                                        text = movie.first_air_date,
-                                        modifier = Modifier
-                                            .fillMaxWidth(),
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                    Button(onClick = {
-                                        selectedMovie = movie // Guardar el movie seleccionado
-                                        showDialog = true
-                                    }) {
-                                        Text(text = "Recomendar")
+                                        Text(
+                                            text = result.releaseDate?: "",
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                        Button(onClick = {
+
+                                        //    selectedMovie = movie // Guardar el movie seleccionado
+                                            showDialog = true
+                                        }) {
+                                            Text(text = "Recomendar")
+                                        }
                                     }
-                                }
 
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
                         }
-                    }
+
                     } catch (e: Exception) {
                         Log.d("MovieDBAPI", "Error: " + e.message)
                         Log.d("MovieDBAPI", "Error: " + e.stackTrace)
@@ -188,7 +190,7 @@ fun SearchView(navController: NavHostController) {
                     }
                 }
             }
-        }else{
+        } else {
             Text(text = "No hay películas")
             Log.d("MovieDBAPI", "No hay pelis")
         }
@@ -207,7 +209,7 @@ fun SearchView(navController: NavHostController) {
                 )
             },
             confirmButton = {
-                Button(
+               /* Button(
                     onClick = {
                         selectedMovie?.let { movie ->
                             searchVM.insertMovie(movie, recommendationText)
@@ -217,7 +219,7 @@ fun SearchView(navController: NavHostController) {
                     }
                 ) {
                     Text("Enviar")
-                }
+                }*/
             },
             dismissButton = {
                 Button(onClick = { showDialog = false }) {

@@ -1,4 +1,4 @@
-package com.example.serierecomendator.data.model.user
+package com.example.serierecomendator.data.model.classes
 
 data class MovieClass (
     val userRecomendator: String? = null, // Set default to null

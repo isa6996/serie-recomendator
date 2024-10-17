@@ -1,8 +1,8 @@
 package com.example.serierecomendator.data.model.retrofit
 
-data class SearchedMovie(
+class SearchedTv(
     val page: Int,
-    val results: List<ResultMovies>,
+    val results: List<ResultTv>,
     val total_pages: Int,
     val total_results: Int
 )

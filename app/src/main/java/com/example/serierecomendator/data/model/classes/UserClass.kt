@@ -1,4 +1,4 @@
-package com.example.serierecomendator.data.model.user
+package com.example.serierecomendator.data.model.classes
 
 data class UserClass(
     var userId: String="",
