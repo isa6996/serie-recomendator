@@ -33,11 +33,6 @@ class RecommendationRepository @Inject constructor(// Inyección de dependencia
             return null as SearchedTv
         }
     }
-}
-
-class RecommendationRepositoryImpl @Inject constructor(
-    private val movieDBApi: MovieDBApi
-) {
     suspend fun getMovies(title: String, type: String): SearchedMovie {
         try {
             Log.d("MovieDBAPI", "sara : " + movieDBApi.listSeries(API_KEY, "EU", title, "es-ES"))

@@ -133,8 +133,9 @@ fun SearchView(navController: NavHostController) {
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Log.d("type", "valor: " + result.type)
+                                    Log.d("imagePoster", "image rute: " + result.posterPath)
                                     Image(
-                                        painter = rememberAsyncImagePainter(model = "${urlStringMovie}${result.posterPath}"),
+                                        painter = rememberAsyncImagePainter(model = "${result.posterPath}"),
                                         contentDescription = "Movie poster for ${result.title}",
                                         modifier = Modifier
                                             .fillMaxWidth(0.5f) // Occupy 50% of the width
