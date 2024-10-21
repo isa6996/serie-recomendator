@@ -7,15 +7,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.serierecomendator.data.model.classes.FinalSearchResult
 import com.example.serierecomendator.data.model.classes.MediaType
-import com.example.serierecomendator.data.model.retrofit.AttributesXX
 import com.example.serierecomendator.data.model.retrofit.Data
 import com.example.serierecomendator.data.model.retrofit.ResultMovies
 import com.example.serierecomendator.data.model.retrofit.ResultTv
-import com.example.serierecomendator.data.model.retrofit.urlStringManga
-import com.example.serierecomendator.data.model.retrofit.urlStringMovie
+import com.example.serierecomendator.data.model.retrofit.ResultWebtoon
+import com.example.serierecomendator.data.model.retrofit.URL_STRING_MANGA
+import com.example.serierecomendator.data.model.retrofit.URL_STRING_MOVIE
+import com.example.serierecomendator.data.model.retrofit.WebtoonTitle
 import com.example.serierecomendator.repository.MangaRecomendationRepository
 import com.example.serierecomendator.repository.MovieFirebaseRepository
 import com.example.serierecomendator.repository.RecommendationRepository
+import com.example.serierecomendator.repository.WebtoonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,7 +29,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val repository: RecommendationRepository,
-    private val mangaRepository: MangaRecomendationRepository
+    private val mangaRepository: MangaRecomendationRepository,
+    private val webtoonRepository: WebtoonRepository
 ): ViewModel() {
     private val movieRepository: MovieFirebaseRepository = MovieFirebaseRepository()
 
@@ -39,6 +42,9 @@ class SearchViewModel @Inject constructor(
 
     private val _mangas = MutableLiveData<List<Data>>()
     val mangas: MutableLiveData<List<Data>> get() = _mangas
+
+    private val _webtoons = MutableLiveData<List<WebtoonTitle>>()
+    val webtoons: LiveData<List<WebtoonTitle>> get() = _webtoons
 
     private val _finalSearchResults = MutableLiveData<List<FinalSearchResult>>()
     val finalSearchResults: LiveData<List<FinalSearchResult>> get() = _finalSearchResults
@@ -74,7 +80,12 @@ class SearchViewModel @Inject constructor(
                     }
 
                     is MediaType.Webtoon -> {
-                        TODO()
+                        val response = webtoonRepository.getWebtoon(searchedTitle)
+                        _webtoons.value = response?.message?.result?.challengeSearch?.titleList
+                        Log.d("webtoon", response?.message?.result?.challengeSearch?.titleList.toString())
+                   //     Log.d("webtoon", response?.titleList.toString())
+                        transformMediaIntoList(type)
+
                     }
 
                     is MediaType.Novel -> {
@@ -94,7 +105,7 @@ class SearchViewModel @Inject constructor(
                     title = resultTv.name ,
                     originalTitle = resultTv.original_name,
                     overview = resultTv.overview,
-                    posterPath = (urlStringMovie + resultTv.poster_path) ?: "",
+                    posterPath = (URL_STRING_MOVIE + resultTv.poster_path) ?: "",
                     releaseDate = resultTv.first_air_date ?: "",
                     type = type.toString()
                 )
@@ -104,30 +115,42 @@ class SearchViewModel @Inject constructor(
                     title = resultMovie.title,
                     originalTitle = resultMovie.original_title,
                     overview = resultMovie.overview,
-                    posterPath = (urlStringMovie + resultMovie.poster_path) ?: "",
+                    posterPath = (URL_STRING_MOVIE + resultMovie.poster_path) ?: "",
                     releaseDate = resultMovie.release_date ?: "",
                     type = type.toString()
                 )
             } ?: emptyList()
             is MediaType.Manga -> _mangas.value?.map { resultManga ->
-                val originalLeng= resultManga.attributes.originalLanguage
+
+                //val originalLeng= resultManga.attributes.originalLanguage
                 val coverArtFileName = resultManga.relationships.find {
                     it.type == "cover_art" }?.attributes?.fileName ?: "No file name"
                 Log.d("mangadex", "id de la cover"+coverArtFileName)
                 FinalSearchResult(
                     title = resultManga.attributes.title.en ?: "",
-                    originalTitle = "resultManga.attributes.altTitles[0].toString()" ?: "",
+                    originalTitle = resultManga.attributes.altTitles.find {
+                        it.ja == resultManga.attributes.originalLanguage }?.ja ?: "",
                     overview = resultManga.attributes.description.es ?: "",
-                    posterPath = (urlStringManga + resultManga.id + "/" +
+                    posterPath = (URL_STRING_MANGA + resultManga.id + "/" +
                             coverArtFileName+".512.jpg") ?: "",
-                  //  posterPath = ""?: "",
                     releaseDate = resultManga.attributes.createdAt ?: "",
                     type = type.toString()
 
                 )
 
             } ?: emptyList()
-            is MediaType.Webtoon -> emptyList()
+            is MediaType.Webtoon -> _webtoons.value?.map { resultWebtoon ->
+                FinalSearchResult(
+                    title = resultWebtoon.title,
+                    originalTitle = "resultWebtoon.title",
+                    overview = "Por derechos de autor de webtoon, no hay imagen disponible",
+                    posterPath = "resultWebtoon.thumbnail",
+                    releaseDate = "resultWebtoon.lastEpisodeRegisterYmdt.toString()",
+                    type = type.toString()
+                )
+
+            } ?: emptyList()
+
             is MediaType.Novel -> emptyList()
             else -> emptyList()
         }

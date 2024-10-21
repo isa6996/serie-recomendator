@@ -39,7 +39,6 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.serierecomendator.data.model.classes.MediaType
 import com.example.serierecomendator.viewModel.SearchViewModel
-import com.example.serierecomendator.data.model.retrofit.urlStringMovie
 
 @Composable
 fun SearchView(navController: NavHostController) {

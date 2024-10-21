@@ -1,13 +1,5 @@
 package com.example.serierecomendator.data.model.retrofit
 
-data class MangaSearchList(
-    val `data`: List<Data>,
-    val limit: Int,
-    val offset: Int,
-    val response: String,
-    val result: String,
-    val total: Int
-)
 data class Title(
     val en: String
 )
@@ -43,7 +35,7 @@ data class Links(
 data class AltTitle(
     val en: String,
     val es: String,
-  //  val es-la: String,
+    //  val es-la: String,
     val fa: String,
     val fr: String,
     val id: String,
@@ -51,14 +43,14 @@ data class AltTitle(
 //    val ja-ro: String,
     val ko: String,
     val mn: String,
- //   val pt-br: String,
+    //   val pt-br: String,
     val ru: String,
     val th: String,
     val tr: String,
     val vi: String,
     val zh: String,
-/*    val zh-hk: String,
-    val zh-ro: String*/
+    /*    val zh-hk: String,
+        val zh-ro: String*/
 )
 
 data class Attributes(
@@ -107,15 +99,15 @@ data class Data(
 data class Description(
     val en: String,
     val es: String,
-  //  val es-la: String,
+    //  val es-la: String,
     val fr: String,
     val ja: String,
     val pt: String,
-  //  val pt-br: String,
+    //  val pt-br: String,
     val ru: String,
     val th: String,
     val vi: String,
     val zh: String,
- //   val zh-hk: String
+    //   val zh-hk: String
 )
 class DescriptionX

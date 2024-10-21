@@ -2,7 +2,7 @@ package com.example.serierecomendator.repository
 
 import android.util.Log
 import com.example.serierecomendator.data.model.retrofit.SearchedMovie
-import com.example.serierecomendator.data.model.retrofit.API_KEY
+import com.example.serierecomendator.data.model.retrofit.MOVIEDB_API_KEY
 import com.example.serierecomendator.data.model.retrofit.SearchedTv
 import com.example.serierecomendator.network.MovieDBApi
 import kotlinx.coroutines.Dispatchers
@@ -18,9 +18,9 @@ class RecommendationRepository @Inject constructor(// Inyección de dependencia
 ) {
     suspend fun getTvSeries(title: String, type: String): SearchedTv{
         try {
-            Log.d("MovieDBAPI", "sara : " + movieDBApi.listSeries(API_KEY, "EU", title, "es-ES"))
+            Log.d("MovieDBAPI", "sara : " + movieDBApi.listSeries(MOVIEDB_API_KEY, "EU", title, "es-ES"))
             return withContext(Dispatchers.IO) {
-                val response = movieDBApi.listSeries( API_KEY, "EU", title, "es-ES")
+                val response = movieDBApi.listSeries( MOVIEDB_API_KEY, "EU", title, "es-ES")
                 response.body()!!
 
             }
@@ -35,9 +35,9 @@ class RecommendationRepository @Inject constructor(// Inyección de dependencia
     }
     suspend fun getMovies(title: String, type: String): SearchedMovie {
         try {
-            Log.d("MovieDBAPI", "sara : " + movieDBApi.listSeries(API_KEY, "EU", title, "es-ES"))
+            Log.d("MovieDBAPI", "sara : " + movieDBApi.listSeries(MOVIEDB_API_KEY, "EU", title, "es-ES"))
             return withContext(Dispatchers.IO) {
-                val response = movieDBApi.listMovies(API_KEY, "EU", title, "es-ES")
+                val response = movieDBApi.listMovies(MOVIEDB_API_KEY, "EU", title, "es-ES")
                 response.body()!!
 
             }

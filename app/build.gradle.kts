@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     kapt("com.google.dagger:hilt-android-compiler:2.46")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+
     //firebase
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("io.coil-kt:coil-compose:2.2.2")
@@ -89,6 +91,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(kotlin("reflect"))
 }
 
 kapt {
