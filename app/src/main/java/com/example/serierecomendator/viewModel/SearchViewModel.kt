@@ -7,8 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.serierecomendator.data.model.classes.FinalSearchResult
 import com.example.serierecomendator.data.model.classes.MediaType
-import com.example.serierecomendator.data.model.retrofit.Data
+import com.example.serierecomendator.data.model.retrofit.ResultMangas
 import com.example.serierecomendator.data.model.retrofit.ResultMovies
+import com.example.serierecomendator.data.model.retrofit.ResultNovel
 import com.example.serierecomendator.data.model.retrofit.ResultTv
 import com.example.serierecomendator.data.model.retrofit.URL_STRING_MANGA
 import com.example.serierecomendator.data.model.retrofit.URL_STRING_MOVIE
@@ -16,10 +17,10 @@ import com.example.serierecomendator.data.model.retrofit.WebtoonTitle
 import com.example.serierecomendator.repository.MangaRecomendationRepository
 import com.example.serierecomendator.repository.MovieFirebaseRepository
 import com.example.serierecomendator.repository.RecommendationRepository
+import com.example.serierecomendator.repository.WLNUpdateRepository
 import com.example.serierecomendator.repository.WebtoonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import okhttp3.internal.notify
 import javax.inject.Inject
 
 /*
@@ -32,31 +33,24 @@ private var lenguageToSearch: String ="es"
 class SearchViewModel @Inject constructor(
     private val repository: RecommendationRepository,
     private val mangaRepository: MangaRecomendationRepository,
-    private val webtoonRepository: WebtoonRepository
+    private val webtoonRepository: WebtoonRepository,
+    private val novelRepository: WLNUpdateRepository
 ): ViewModel() {
     private val movieRepository: MovieFirebaseRepository = MovieFirebaseRepository()
 
     private val _tvSeries =MutableLiveData<List<ResultTv>?>()
-    val tvSeries: MutableLiveData<List<ResultTv>?> get() = _tvSeries
 
     private val _movies =MutableLiveData<List<ResultMovies>>()
-    val movies: LiveData<List<ResultMovies>> get() = _movies
 
-    private val _mangas = MutableLiveData<List<Data>>()
-    val mangas: MutableLiveData<List<Data>> get() = _mangas
+    private val _mangas = MutableLiveData<List<ResultMangas>>()
 
     private val _webtoons = MutableLiveData<List<WebtoonTitle>>()
-    val webtoons: LiveData<List<WebtoonTitle>> get() = _webtoons
+
+    private val _novels = MutableLiveData<List<ResultNovel>>()
 
 
     private val _finalSearchResults = MutableLiveData<List<FinalSearchResult>>()
     val finalSearchResults: LiveData<List<FinalSearchResult>> get() = _finalSearchResults
-
-
-
-
-
-
 
     private val _canvasIdiom = MutableLiveData(true)
      val canvasIdiom: LiveData<Boolean> get() = _canvasIdiom
@@ -118,7 +112,13 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
                     }
 
                     is MediaType.Novel -> {
-                        TODO()
+                        val response = novelRepository.getNovel(searchedTitle)
+                        Log.d("buscar","novelas encontradas: ${response?.data?.size}" )
+                        Log.d("wlnupdates", response?.data.toString())
+                        Log.d("wlnupdates", response.toString())
+
+                        _novels.value = response?.data ?: emptyList()
+                        transformMediaIntoList(type)
                     }
                 }
             }
@@ -171,7 +171,7 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
             is MediaType.Webtoon -> _webtoons.value?.map { resultWebtoon ->
                 FinalSearchResult(
                     title = resultWebtoon.title,
-                    originalTitle = "resultWebtoon.title",
+                    originalTitle = resultWebtoon.title,
                     overview = "",
                     posterPath = "https://webtoon-phinf.pstatic.net"+resultWebtoon.thumbnail+"?type=q90",
                     releaseDate = "resultWebtoon.lastEpisodeRegisterYmdt.toString()",
@@ -180,7 +180,16 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
 
             } ?: emptyList()
 
-            is MediaType.Novel -> emptyList()
+            is MediaType.Novel -> _novels.value?.map { resultNovel ->
+                FinalSearchResult(
+                    title = resultNovel.title,
+                    originalTitle = resultNovel.title,
+                    overview = resultNovel.description ?:"",
+                    posterPath = resultNovel.covers.firstOrNull()?.url ?: "",
+                    releaseDate = resultNovel.latest_published.toString() ?: "",
+                    type = type.toString()
+                )
+            }?: emptyList()
             else -> emptyList()
         }
     }
@@ -200,4 +209,7 @@ fun insertMovie(serieTv: ResultTv, recommendationText: String) {
     movieRepository.createMovies(serieTv.original_language, serieTv.original_name, serieTv.name,
         serieTv.overview, serieTv.id, moviePoster, recommendationText)
     }*/
+
+
+
 }

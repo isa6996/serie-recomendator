@@ -1,7 +1,7 @@
 package com.example.serierecomendator.data.model.retrofit
 
 data class MangaSearchList(
-    val `data`: List<Data>,
+    val `data`: List<ResultMangas>,
     val limit: Int,
     val offset: Int,
     val response: String,

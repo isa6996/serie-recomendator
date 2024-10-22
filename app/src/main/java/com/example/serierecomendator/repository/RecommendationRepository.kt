@@ -5,6 +5,9 @@ import com.example.serierecomendator.data.model.retrofit.SearchedMovie
 import com.example.serierecomendator.data.model.retrofit.MOVIEDB_API_KEY
 import com.example.serierecomendator.data.model.retrofit.SearchedTv
 import com.example.serierecomendator.network.MovieDBApi
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -13,6 +16,8 @@ import javax.inject.Inject
  *  Clase Repository para la API de películas.
  *  Pone a disposición de la clase MovieDBApi para llamar a la API de películas.
  */
+@Module
+@InstallIn(SingletonComponent::class)
 class RecommendationRepository @Inject constructor(// Inyección de dependencias
     private val movieDBApi: MovieDBApi
 ) {

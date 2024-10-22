@@ -3,10 +3,15 @@ package com.example.serierecomendator.repository
 import android.util.Log
 import com.example.serierecomendator.data.model.retrofit.ResultWebtoon
 import com.example.serierecomendator.network.RapidApi
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@Module
+@InstallIn(SingletonComponent::class)
 class WebtoonRepository @Inject constructor(
     private val rapidApi: RapidApi
 ) {

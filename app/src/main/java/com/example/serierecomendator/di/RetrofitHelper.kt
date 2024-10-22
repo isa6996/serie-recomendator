@@ -6,6 +6,7 @@ import com.example.serierecomendator.data.model.retrofit.RAPIDAPI_HOST
 import com.example.serierecomendator.network.MangaDexApi
 import com.example.serierecomendator.network.MovieDBApi
 import com.example.serierecomendator.network.RapidApi
+import com.example.serierecomendator.network.WLNUpdatesApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -72,6 +73,16 @@ object RetrofitHelper {
 
     @Singleton
     @Provides
+    @Named("WLNUpdates")
+    fun provideWLNUpdatesRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://www.wlnupdates.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Singleton
+    @Provides
     fun provideMovieDBClient(@Named("MovieDB") movieDBRetrofit: Retrofit): MovieDBApi {
         return movieDBRetrofit.create(MovieDBApi::class.java)
     }
@@ -86,6 +97,13 @@ object RetrofitHelper {
     @Provides
     fun provideRapidApi(@Named("Webtoon") webtoonRetrofit: Retrofit): RapidApi {
         return webtoonRetrofit.create(RapidApi::class.java)
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideWLNUpdatesApi(@Named("WLNUpdates") wlnUpdatesRetrofit: Retrofit): WLNUpdatesApi {
+        return wlnUpdatesRetrofit.create(WLNUpdatesApi::class.java)
     }
 
 }

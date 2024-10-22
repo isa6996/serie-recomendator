@@ -47,7 +47,6 @@ fun SearchView(navController: NavHostController) {
     var searchedTitleMovie by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var recommendationText by remember { mutableStateOf("") }
-    var canvasIdiom by remember { mutableStateOf(false) }
   //  var selectedMovie by remember { mutableStateOf<finalResults?>(null) } // Asegúrate de que Result esté definido
 
     val finalResults = searchVM.finalSearchResults.observeAsState()

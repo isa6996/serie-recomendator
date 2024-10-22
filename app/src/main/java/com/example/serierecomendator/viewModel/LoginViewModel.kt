@@ -14,7 +14,6 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     private val auth= FirebaseAuth.getInstance()
 
     fun  loginUser(email: String, password: String, onLoginSuccess: (String) -> Unit) {
-
         if (email.isNotEmpty() && password.isNotEmpty()) {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
