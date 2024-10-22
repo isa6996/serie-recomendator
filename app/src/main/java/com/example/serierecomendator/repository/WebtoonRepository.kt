@@ -10,10 +10,10 @@ import javax.inject.Inject
 class WebtoonRepository @Inject constructor(
     private val rapidApi: RapidApi
 ) {
-    suspend fun getWebtoon(title: String): ResultWebtoon? {
+    suspend fun getWebtoon(title: String, language: String): ResultWebtoon? {
         try {
             return withContext(Dispatchers.IO) {
-                val response = rapidApi.searchCanvasWebtoon(0, 20, title)
+                val response = rapidApi.searchCanvasWebtoon(0, 20, title, language)
                 Log.d("RapidApi", "Success: ${response.body()}")
                 if (response.isSuccessful) {
                     response.body() // Esto devuelve null si el cuerpo es null

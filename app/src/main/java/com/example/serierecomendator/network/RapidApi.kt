@@ -12,7 +12,7 @@ interface RapidApi {
         @Query("startIndex") startIndex: Int = 0,
         @Query("pageSize") pageSize: Int = 20,
         @Query("query") query: String,
-        @Query("language") language: String = "en"
+        @Query("language") language: String
     ): Response<ResultWebtoon>
 }
 

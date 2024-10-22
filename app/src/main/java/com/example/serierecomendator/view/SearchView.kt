@@ -40,12 +40,14 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.serierecomendator.data.model.classes.MediaType
 import com.example.serierecomendator.viewModel.SearchViewModel
 
+
 @Composable
 fun SearchView(navController: NavHostController) {
     val searchVM: SearchViewModel = hiltViewModel()
     var searchedTitleMovie by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var recommendationText by remember { mutableStateOf("") }
+    var canvasIdiom by remember { mutableStateOf(false) }
   //  var selectedMovie by remember { mutableStateOf<finalResults?>(null) } // Asegúrate de que Result esté definido
 
     val finalResults = searchVM.finalSearchResults.observeAsState()

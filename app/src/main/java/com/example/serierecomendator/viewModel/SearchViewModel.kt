@@ -10,7 +10,6 @@ import com.example.serierecomendator.data.model.classes.MediaType
 import com.example.serierecomendator.data.model.retrofit.Data
 import com.example.serierecomendator.data.model.retrofit.ResultMovies
 import com.example.serierecomendator.data.model.retrofit.ResultTv
-import com.example.serierecomendator.data.model.retrofit.ResultWebtoon
 import com.example.serierecomendator.data.model.retrofit.URL_STRING_MANGA
 import com.example.serierecomendator.data.model.retrofit.URL_STRING_MOVIE
 import com.example.serierecomendator.data.model.retrofit.WebtoonTitle
@@ -20,12 +19,15 @@ import com.example.serierecomendator.repository.RecommendationRepository
 import com.example.serierecomendator.repository.WebtoonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import okhttp3.internal.notify
 import javax.inject.Inject
 
 /*
  * sirve para hacer la llamada a la api de MovieDB y obtener las películas recomendadas
  * el inject sirve para inyectar dependencias de la clase RecommendationRepository
  */
+private var lenguageToSearch: String ="es"
+
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val repository: RecommendationRepository,
@@ -46,14 +48,38 @@ class SearchViewModel @Inject constructor(
     private val _webtoons = MutableLiveData<List<WebtoonTitle>>()
     val webtoons: LiveData<List<WebtoonTitle>> get() = _webtoons
 
+
     private val _finalSearchResults = MutableLiveData<List<FinalSearchResult>>()
     val finalSearchResults: LiveData<List<FinalSearchResult>> get() = _finalSearchResults
 
 
+
+
+
+
+
+    private val _canvasIdiom = MutableLiveData(true)
+     val canvasIdiom: LiveData<Boolean> get() = _canvasIdiom
+
+    fun toggleMode() {
+        Log.d("SearchViewModel", "idioma antes toggled: ${lenguageToSearch}")
+        Log.d("SearchViewModel", "canvasIdiom antes toggled: ${_canvasIdiom.value}")
+        _canvasIdiom.value = _canvasIdiom.value!!.not()
+        lenguageToSearch = if (_canvasIdiom.value!!) {
+            "es"
+        } else {
+            "en"
+        }
+
+        Log.d("SearchViewModel", "canvasIdiom despues toggled: ${_canvasIdiom.value}")
+    }
+
     fun searchTitle(title: String, type: MediaType) {
+Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
         try {
             val searchedTitle = title.replace(" ", "+")
-
+            Log.d("webtoon", _canvasIdiom.toString())
+            Log.d("webtoon", _canvasIdiom.value.toString())
             viewModelScope.launch {
                 when (type) {
                     is MediaType.Tv -> {
@@ -62,6 +88,7 @@ class SearchViewModel @Inject constructor(
                         transformMediaIntoList(type)
                         Log.d("search", response.results.toString())
                         Log.d("search", finalSearchResults.toString())
+                        Log.d("webtoon", lenguageToSearch)
                     }
 
                     is MediaType.Movie -> {
@@ -80,7 +107,9 @@ class SearchViewModel @Inject constructor(
                     }
 
                     is MediaType.Webtoon -> {
-                        val response = webtoonRepository.getWebtoon(searchedTitle)
+                        Log.d("webtoon", lenguageToSearch)
+
+                        val response = webtoonRepository.getWebtoon(searchedTitle, lenguageToSearch)
                         _webtoons.value = response?.message?.result?.challengeSearch?.titleList
                         Log.d("webtoon", response?.message?.result?.challengeSearch?.titleList.toString())
                    //     Log.d("webtoon", response?.titleList.toString())
@@ -143,8 +172,8 @@ class SearchViewModel @Inject constructor(
                 FinalSearchResult(
                     title = resultWebtoon.title,
                     originalTitle = "resultWebtoon.title",
-                    overview = "Por derechos de autor de webtoon, no hay imagen disponible",
-                    posterPath = "resultWebtoon.thumbnail",
+                    overview = "",
+                    posterPath = "https://webtoon-phinf.pstatic.net"+resultWebtoon.thumbnail+"?type=q90",
                     releaseDate = "resultWebtoon.lastEpisodeRegisterYmdt.toString()",
                     type = type.toString()
                 )
@@ -155,6 +184,8 @@ class SearchViewModel @Inject constructor(
             else -> emptyList()
         }
     }
+
+
 
 
     /*fun insertMovie(movie: ResultMovies, recommendationText: String) {

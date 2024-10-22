@@ -15,7 +15,7 @@ val SETTINGS_GRAPH_ROUTE = "settings"
 fun Navigation(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = AUTH_GRAPH_ROUTE
+        startDestination = SETTINGS_GRAPH_ROUTE
     ) {
         addNavGraph(
             navController = navController,
@@ -25,7 +25,7 @@ fun Navigation(navController: NavHostController) {
         )
         addNavGraph(
             navController = navController,
-            startDestination = Screen.Settings.route,
+            startDestination = Screen.Search.route,
             route = SETTINGS_GRAPH_ROUTE,
             screens = listOf(Screen.Settings, Screen.Search, Screen.Profile, Screen.EditProfile, Screen.Home)
         )
@@ -38,3 +38,4 @@ fun Navigation(navController: NavHostController) {
         }
     }
 }
+
