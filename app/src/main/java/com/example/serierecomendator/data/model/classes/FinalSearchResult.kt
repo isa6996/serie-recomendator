@@ -6,5 +6,8 @@ class FinalSearchResult (
     val overview: String?,
     val posterPath: String?,
     val releaseDate: String?,
-    val type: String
+    val type: String,
+    val id: String,
+    val originalLanguage: String,
+
 )

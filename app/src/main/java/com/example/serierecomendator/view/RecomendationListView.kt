@@ -79,7 +79,7 @@ fun RecomendationListView(navController: NavHostController,
                                 ) {
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(text = user!!.displayName)
-                                    Text(text = "Tipo de serie (Serie o Pelicula?)")
+                                    Text(text = movie!!.type)
                                     Text(
                                         text = movie!!.title,
                                         style = MaterialTheme.typography.titleMedium

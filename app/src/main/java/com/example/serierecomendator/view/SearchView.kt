@@ -1,4 +1,6 @@
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,17 +39,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.serierecomendator.data.model.classes.FinalSearchResult
 import com.example.serierecomendator.data.model.classes.MediaType
 import com.example.serierecomendator.viewModel.SearchViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SearchView(navController: NavHostController) {
     val searchVM: SearchViewModel = hiltViewModel()
     var searchedTitleMovie by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var recommendationText by remember { mutableStateOf("") }
-  //  var selectedMovie by remember { mutableStateOf<finalResults?>(null) } // Asegúrate de que Result esté definido
+    var selectedDocument by remember { mutableStateOf<FinalSearchResult?>(null) } // Asegúrate de que Result esté definido
 
     val finalResults = searchVM.finalSearchResults.observeAsState()
 
@@ -172,7 +176,7 @@ fun SearchView(navController: NavHostController) {
                                         )
                                         Button(onClick = {
 
-                                        //    selectedMovie = movie // Guardar el movie seleccionado
+                                            selectedDocument = result // Guardar el movie seleccionado
                                             showDialog = true
                                         }) {
                                             Text(text = "Recomendar")
@@ -210,17 +214,17 @@ fun SearchView(navController: NavHostController) {
                 )
             },
             confirmButton = {
-               /* Button(
+                Button(
                     onClick = {
-                        selectedMovie?.let { movie ->
-                            searchVM.insertMovie(movie, recommendationText)
+                        selectedDocument?.let { result ->
+                            searchVM.insertMovie(result, recommendationText)
                         }
                         showDialog = false
                         recommendationText = "" // Reiniciar el texto
                     }
                 ) {
                     Text("Enviar")
-                }*/
+                }
             },
             dismissButton = {
                 Button(onClick = { showDialog = false }) {

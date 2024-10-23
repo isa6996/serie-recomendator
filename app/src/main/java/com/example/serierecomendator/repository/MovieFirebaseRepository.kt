@@ -1,6 +1,8 @@
 package com.example.serierecomendator.repository
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.serierecomendator.data.model.classes.MovieClass
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import java.time.Instant
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -35,7 +38,6 @@ class MovieFirebaseRepository {
     fun getAllRecomendatedMoviesFB(): Flow<List<MovieClass?>> {
         return flow {
             val snapshot = db.collection("movies")
-       //         .whereIn("userRecomendator", listOf(userId, null))
                 .get().await()
             val movies = snapshot.toObjects(MovieClass::class.java)
             emit(movies)
@@ -45,18 +47,23 @@ class MovieFirebaseRepository {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun createMovies(
         language: String,
         originalTitle: String,
         title: String,
-        sinopsis: String,
-        id: Int,
+        synopsis: String,
+        id: String,
         image: String,
+        type: String,
         opinion: String
     ) {
         val userDisplayNameId= userId
-        val movie = MovieClass(userId, language, originalTitle,title, sinopsis, id, image, opinion)
-
+        val currentTimeInSeconds = Instant.now().epochSecond
+        val movie = MovieClass(userId, language, originalTitle,title, synopsis, id, image,type,
+            opinion, currentTimeInSeconds)
+Log.d("serieInq", "user: " + userDisplayNameId)
+        Log.d("serieInq", "movie: " + movie)
         db.collection("movies").add(movie).addOnCompleteListener {
             task ->
             if (task.isSuccessful) {

@@ -1,6 +1,8 @@
 package com.example.serierecomendator.viewModel
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -136,6 +138,8 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
                     overview = resultTv.overview,
                     posterPath = (URL_STRING_MOVIE + resultTv.poster_path) ?: "",
                     releaseDate = resultTv.first_air_date ?: "",
+                    id = resultTv.id.toString(),
+                    originalLanguage = resultTv.original_language,
                     type = type.toString()
                 )
             } ?: emptyList()
@@ -146,6 +150,8 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
                     overview = resultMovie.overview,
                     posterPath = (URL_STRING_MOVIE + resultMovie.poster_path) ?: "",
                     releaseDate = resultMovie.release_date ?: "",
+                    id = resultMovie.id.toString(),
+                    originalLanguage = resultMovie.original_language,
                     type = type.toString()
                 )
             } ?: emptyList()
@@ -163,6 +169,8 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
                     posterPath = (URL_STRING_MANGA + resultManga.id + "/" +
                             coverArtFileName+".512.jpg") ?: "",
                     releaseDate = resultManga.attributes.createdAt ?: "",
+                    id = resultManga.id.toString(),
+                    originalLanguage = resultManga.attributes.originalLanguage,
                     type = type.toString()
 
                 )
@@ -174,7 +182,9 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
                     originalTitle = resultWebtoon.title,
                     overview = "",
                     posterPath = "https://webtoon-phinf.pstatic.net"+resultWebtoon.thumbnail+"?type=q90",
-                    releaseDate = "resultWebtoon.lastEpisodeRegisterYmdt.toString()",
+                    releaseDate = "",
+                    id = resultWebtoon.titleNo.toString(),
+                    originalLanguage = lenguageToSearch,
                     type = type.toString()
                 )
 
@@ -187,6 +197,8 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
                     overview = resultNovel.description ?:"",
                     posterPath = resultNovel.covers.firstOrNull()?.url ?: "",
                     releaseDate = resultNovel.latest_published.toString() ?: "",
+                    id = resultNovel.id.toString(),
+                    originalLanguage = resultNovel.tl_type ?: "",
                     type = type.toString()
                 )
             }?: emptyList()
@@ -196,20 +208,10 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
 
 
 
-
-    /*fun insertMovie(movie: ResultMovies, recommendationText: String) {
-    val moviePoster=urlStringMovie+movie.poster_path
-    movieRepository.createMovies(movie.original_language, movie.original_title, movie.title,
-        movie.overview, movie.id, moviePoster, recommendationText)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun insertMovie(movie: FinalSearchResult, recommendationText: String) {
+        movieRepository.createMovies(movie.originalLanguage, movie.originalTitle ?:"", movie.title?:"",
+        movie.overview?:"", movie.id, movie.posterPath?:"",movie.type, recommendationText)
 }
-
-fun insertMovie(serieTv: ResultTv, recommendationText: String) {
-    val moviePoster=urlStringMovie+serieTv.poster_path
-
-    movieRepository.createMovies(serieTv.original_language, serieTv.original_name, serieTv.name,
-        serieTv.overview, serieTv.id, moviePoster, recommendationText)
-    }*/
-
-
 
 }

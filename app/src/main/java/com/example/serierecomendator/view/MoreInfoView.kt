@@ -30,7 +30,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.serierecomendator.viewModel.RecomendationListViewModel
 
 @Composable
-fun MoreInfoView(movieId: Int) {
+fun MoreInfoView(movieId: String) {
     val recomendationListViewModel: RecomendationListViewModel = hiltViewModel()
     val recommendations by recomendationListViewModel.recommendations.collectAsState()
     val selectedMovie = recommendations.find { it.first?.id == movieId }
