@@ -10,5 +10,5 @@ data class MovieClass(
     val image: String = "",
     val type: String = "",
     val opinion: String = "",
-    val currentTimeInSeconds: Long
+    val currentTimeInSeconds: Long= 0L
 )

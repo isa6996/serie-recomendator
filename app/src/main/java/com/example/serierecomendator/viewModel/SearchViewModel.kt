@@ -130,17 +130,18 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
     }
 
     fun transformMediaIntoList(type: MediaType) {
+
         _finalSearchResults.value = when (type) {
             is MediaType.Tv -> _tvSeries.value?.map { resultTv ->
                 FinalSearchResult(
                     title = resultTv.name ,
                     originalTitle = resultTv.original_name,
                     overview = resultTv.overview,
-                    posterPath = (URL_STRING_MOVIE + resultTv.poster_path) ?: "",
-                    releaseDate = resultTv.first_air_date ?: "",
+                    posterPath = (URL_STRING_MOVIE + resultTv.poster_path) ,
+                    releaseDate = resultTv.first_air_date ,
                     id = resultTv.id.toString(),
                     originalLanguage = resultTv.original_language,
-                    type = type.toString()
+                    type = "Serie"
                 )
             } ?: emptyList()
             is MediaType.Movie -> _movies.value?.map { resultMovie ->
@@ -148,11 +149,11 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
                     title = resultMovie.title,
                     originalTitle = resultMovie.original_title,
                     overview = resultMovie.overview,
-                    posterPath = (URL_STRING_MOVIE + resultMovie.poster_path) ?: "",
-                    releaseDate = resultMovie.release_date ?: "",
+                    posterPath = (URL_STRING_MOVIE + resultMovie.poster_path) ,
+                    releaseDate = resultMovie.release_date ,
                     id = resultMovie.id.toString(),
                     originalLanguage = resultMovie.original_language,
-                    type = type.toString()
+                    type = "Película"
                 )
             } ?: emptyList()
             is MediaType.Manga -> _mangas.value?.map { resultManga ->
@@ -162,16 +163,16 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
                     it.type == "cover_art" }?.attributes?.fileName ?: "No file name"
                 Log.d("mangadex", "id de la cover"+coverArtFileName)
                 FinalSearchResult(
-                    title = resultManga.attributes.title.en ?: "",
+                    title = resultManga.attributes.title.en ,
                     originalTitle = resultManga.attributes.altTitles.find {
                         it.ja == resultManga.attributes.originalLanguage }?.ja ?: "",
-                    overview = resultManga.attributes.description.es ?: "",
+                    overview = resultManga.attributes.description.en,
                     posterPath = (URL_STRING_MANGA + resultManga.id + "/" +
                             coverArtFileName+".512.jpg") ?: "",
                     releaseDate = resultManga.attributes.createdAt ?: "",
                     id = resultManga.id.toString(),
                     originalLanguage = resultManga.attributes.originalLanguage,
-                    type = type.toString()
+                    type = "Man(g/h/hw)a"
 
                 )
 
@@ -182,10 +183,10 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
                     originalTitle = resultWebtoon.title,
                     overview = "",
                     posterPath = "https://webtoon-phinf.pstatic.net"+resultWebtoon.thumbnail+"?type=q90",
-                    releaseDate = "",
+                    releaseDate = resultWebtoon.writingAuthorName,
                     id = resultWebtoon.titleNo.toString(),
                     originalLanguage = lenguageToSearch,
-                    type = type.toString()
+                    type = "Webtoon"
                 )
 
             } ?: emptyList()
@@ -199,7 +200,7 @@ Log.d("idioma", "cuando le das a buscar: "+ lenguageToSearch)
                     releaseDate = resultNovel.latest_published.toString() ?: "",
                     id = resultNovel.id.toString(),
                     originalLanguage = resultNovel.tl_type ?: "",
-                    type = type.toString()
+                    type = "Novela"
                 )
             }?: emptyList()
             else -> emptyList()

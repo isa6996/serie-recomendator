@@ -62,6 +62,15 @@ fun MoreInfoView(movieId: String) {
                             modifier = Modifier.padding(8.dp)
                         )
 
+                        if(selectedMovie.first?.type == "Webtoon") {
+                            Text(
+                                text = "Autor",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier
+                                    .padding(8.dp)
+                            )
+                        }
+
                         Text(text = "${selectedMovie.first?.originalTitle}")
 
                         Text(

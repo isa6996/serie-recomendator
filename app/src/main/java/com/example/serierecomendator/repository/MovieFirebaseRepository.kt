@@ -42,6 +42,8 @@ class MovieFirebaseRepository {
             val movies = snapshot.toObjects(MovieClass::class.java)
             emit(movies)
         }.catch { throwable ->
+
+            Log.e("prueba", "Error: ${throwable.message}", throwable)
             Log.d("prueba", "Error: $throwable")
             println("Error fetching movies: $throwable")
         }

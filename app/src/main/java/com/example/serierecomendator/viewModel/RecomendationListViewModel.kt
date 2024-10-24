@@ -31,15 +31,18 @@ class RecomendationListViewModel@Inject constructor(
 
     init {
         getAllRecommendedMovies()
+        Log.d("RecomendationListViewModel", "recomendated M : " + _recommendations.toString())
     }
 
     fun getAllRecommendedMovies() {
 
         viewModelScope.launch {
-            Log.d("serieInq", "a veeer: " + repo.getAllRecomendatedMoviesFB())
+            Log.d("serieInq", "a veeer: " + repo.getAllRecomendatedMoviesFB().toString())
 
             repo.getAllRecomendatedMoviesFB().collect { movies ->
-                _recommendations.value = movies.map { movie ->
+                _recommendations.value = movies
+                    .sortedByDescending { it?.currentTimeInSeconds }
+                    .map { movie ->
                     val user = getUserByIdAsync(movie?.userRecomendator ?: "")
                     Pair(movie, user)
                 }

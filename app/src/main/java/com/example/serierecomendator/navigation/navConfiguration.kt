@@ -1,5 +1,7 @@
 package com.example.serierecomendator.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -11,11 +13,12 @@ import androidx.navigation.navArgument
 
 val AUTH_GRAPH_ROUTE = "login"
 val SETTINGS_GRAPH_ROUTE = "settings"
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = SETTINGS_GRAPH_ROUTE
+        startDestination = AUTH_GRAPH_ROUTE
     ) {
         addNavGraph(
             navController = navController,
@@ -31,9 +34,9 @@ fun Navigation(navController: NavHostController) {
         )
         composable(
             route = "movie_details_screen/{movieId}",
-            arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+            arguments = listOf(navArgument("movieId") { type = NavType.StringType })
         ) {
-            val movieId = it.arguments?.getInt("movieId") ?: -1
+            val movieId = it.arguments?.getString("movieId") ?: ""
             MoreInfoView(movieId = movieId)
         }
     }
